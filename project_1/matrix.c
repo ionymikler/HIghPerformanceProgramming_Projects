@@ -1,22 +1,18 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include "matrix.h"
 
-//Matrix multiplication function (all matrixes are generated with RandomMatrix)
-//MatrixA is[m, k]
-//MatrixB is[k, n]
-//MatrixC is[m, n]
-    void
-    multiplicationMatrix(int N, int M, int K, int **matrixA, int **matrixB, int **resultMatrix)
+void multiplicationMatrix(int n, int m, int k, int **A, int **B, int **C)
 {
-    for (int i = 0; i < M; i++)
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < N; j++)
+        for (int j = 0; j < m; j++)
         {
-            resultMatrix[i][j] = 0;
-            for (int k = 0; k < K; k++)
+            C[i][j] = 0;
+            for (int _k = 0; _k < k; _k++)
             {
-                resultMatrix[i][j] += matrixA[i][k] * matrixB[k][j];
+                C[i][j] += A[i][_k] * B[_k][j];
             }
         }
     }
