@@ -2,10 +2,10 @@
 
 CC=${1-"gcc"}
 
-# PERMS="mnk nmk mkn nkm kmn knm"
-# M="5 10 50 100 500 1000 1500 2000"
-PERMS="mnk"
-M="5 10"
+PERMS="mnk nmk mkn nkm kmn knm"
+M="5 10 50 100 250 500 750 1000 1500 2000"
+# PERMS="mnk"
+# M="5 10"
 
 LOGEXT=log
 
