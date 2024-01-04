@@ -1,6 +1,6 @@
 TARGET	= libmatmult.so
-LIBSRCS	= matrix_lib/matrix.c
-LIBOBJS	=  $(LIBSRCS:.c=.o)
+LIBSRCS	= matrix_lib/matmul_permutations.c
+LIBOBJS	= $(LIBSRCS:.c=.o)
 
 OPT	= -g 
 PIC	= -fPIC
