@@ -94,8 +94,10 @@ below).
 
 The output of a run looks like:
 
+```
 $ ./matmult_f.gcc nat 50 60 70
-    83.594    151.173 0 # matmult_nat
+83.594 151.173 0 # matmult_nat
+```
 
 where the first number is the memory usage in kbytes, the second
 number the Mflop/s and the third number the difference between your
