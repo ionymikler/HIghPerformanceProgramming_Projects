@@ -48,7 +48,6 @@ void matmult_nmk(int m,int n,int k,double **A,double **B,double **C){
                 C[row][col] += A[row][q] * B[q][col];
             }
         }
-    }
 }
 
 void matmult_mkn(int m,int n,int k,double **A,double **B,double **C){
