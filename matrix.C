@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <cblas.h>
 
 //Matrix multiplication function (all matrixes are generated with RandomMatrix)
 //MatrixA is[m, k]
 //MatrixB is[k, n]
 //MatrixC is[m, n]
     void
-    multiplicationMatrix(int N, int M, int K, int **matrixA, int **matrixB, int **resultMatrix)
+    multiplicationMatrix(int N, int M, int K, double **matrixA, double **matrixB, double **resultMatrix)
 {
     for (int i = 0; i < M; i++)
     {
@@ -21,20 +22,39 @@
         }
     }
 }
+
+// Wrapper function for the CBLas 
+void matmul_lib(int n, int m, int k, double **matrixA, double **matrixB, double **resultMatrix){
+    
+    cblas_dgemm(CblasRowMajor,
+                CblasNoTrans,
+                CblasNoTrans,
+                m,
+                n,
+                k,
+                1.0,
+                matrixA,
+                k,
+                matrixB,
+                n,
+                0.0,
+                resultMatrix,
+                n);
+}
 // Random matrix 
-void RandomMatrix(int **matrix, int rows, int cols)
+void RandomMatrix(double **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            matrix[i][j] = rand() % 2;
+            matrix[i][j] = rand() % RAND_MAX;
             // printf("i: %d, j: %d\n", i, j);
         }
     }
 }
 
-void printMatrix(int **matrix, int rows, int cols)
+void printMatrix(double **matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
@@ -61,22 +81,22 @@ int main()
     double cpu_time_used;
 
     // Initialize matrix A
-    int **matrixA = (int **)malloc(m * sizeof(int *));
+    double **matrixA = (double **)malloc(m * sizeof(int *));
     for (int i = 0; i < m; i++)
     {
-        matrixA[i] = (int *)malloc(k * sizeof(int));
+        matrixA[i] = (double *)malloc(k * sizeof(int));
     }
     //Initialize matrix B
-    int **matrixB = (int **)malloc(k * sizeof(int *));
+    double **matrixB = (double **)malloc(k * sizeof(int *));
     for (int i = 0; i < k; i++)
     {
-        matrixB[i] = (int *)malloc(n * sizeof(int));
+        matrixB[i] = (double *)malloc(n * sizeof(int));
     }
     //Initialize Matrix C
-    int **resultMatrix = (int **)malloc(m * sizeof(int *));
+    double **resultMatrix = (double **)malloc(m * sizeof(double *));
     for (int i = 0; i < m; i++)
     {
-        resultMatrix[i] = (int *)malloc(n * sizeof(int));
+        resultMatrix[i] = (double *)malloc(n * sizeof(int));
     };
     
     // Populize Matrix A and B
@@ -96,6 +116,8 @@ int main()
     printMatrix(matrixB, k, n);
     end = clock();
     
+    matmul_lib(n,m,k,matrixA,matrixB,resultMatrix);
+    printMatrix(resultMatrix, m,n);
     //Clean the memory
     free(matrixA);
     free(matrixB);
