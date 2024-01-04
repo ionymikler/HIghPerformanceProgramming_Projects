@@ -29,26 +29,28 @@ void matmul_lib(int n, int m, int k, double **matrixA, double **matrixB, double 
     cblas_dgemm(CblasRowMajor,
                 CblasNoTrans,
                 CblasNoTrans,
-                m,
-                n,
-                k,
+                m, n, k,
                 1.0,
-                matrixA,
+                matrixA[0],
                 k,
-                matrixB,
+                matrixB[0],
                 n,
                 0.0,
-                resultMatrix,
+                resultMatrix[0],
                 n);
 }
 // Random matrix 
 void RandomMatrix(double **matrix, int rows, int cols)
 {
+    int max = 10;
+    int min = 0;
+
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            matrix[i][j] = rand() % RAND_MAX;
+            matrix[i][j] = (double)rand() / RAND_MAX * 10;
+
             // printf("i: %d, j: %d\n", i, j);
         }
     }
@@ -60,7 +62,7 @@ void printMatrix(double **matrix, int rows, int cols)
     {
         for (int j = 0; j < cols; j++)
         {
-            printf("%d ", matrix[i][j]);
+            printf("%f ", matrix[i][j]);
         }
         printf("\n");
     };
@@ -71,9 +73,9 @@ int main()
     // Adjust for matrix sizes:
     //MatrixA is[m, k]
     //MatrixB is[k, n]
-    int m = 3;
-    int n = 3;
-    int k = 4;
+    int m = 2;
+    int n = 2;
+    int k = 2;
 
     //n_rounds number of times matrix multiplication will be executed 
     int n_rounds = 1;
@@ -109,15 +111,17 @@ int main()
     {
         multiplicationMatrix(n, m, k, matrixA, matrixB, resultMatrix);
     }
+    end = clock();
+
 
     //Print the results for 
     printMatrix(resultMatrix, m, n);
     printMatrix(matrixA, m, k);
     printMatrix(matrixB, k, n);
-    end = clock();
+    
     
     matmul_lib(n,m,k,matrixA,matrixB,resultMatrix);
-    printMatrix(resultMatrix, m,n);
+    //printMatrix(resultMatrix, m,n);
     //Clean the memory
     free(matrixA);
     free(matrixB);
