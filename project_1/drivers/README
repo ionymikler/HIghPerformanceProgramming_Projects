@@ -62,16 +62,16 @@ drivers provided are:
 
 a) matrices represented by double pointers (see 1.a):
 
-matmult_c.gcc     - driver for libraries built with gcc/g++, linked
+`matmult_c.gcc`     - driver for libraries built with gcc/g++, linked
                     with CBLAS from ATLAS
-matmult_c.studio  - driver for libraries built with suncc/sunCC,
+`matmult_c.studio`  - driver for libraries built with suncc/sunCC,
                     linked with Studio Performance Library
 
 b) matrices represented by single pointers, i.e. as a vector (see 1.b):
 
-matmult_f.gcc     - driver for libraries built with gcc/g++, linked
+`matmult_f.gcc`     - driver for libraries built with gcc/g++, linked
                     with CBLAS from ATLAS
-matmult_f.studio  - driver for libraries built with suncc/sunCC,
+`matmult_f.studio`  - driver for libraries built with suncc/sunCC,
                     linked with Studio Performance Library
 
 All drivers take the same command line arguments:
@@ -81,9 +81,9 @@ matmult_... type m k n [bs]
 where m, n, k are the parameters defining the matrix sizes, bs is the
 optional blocksize for the block version, and type can be one of:
 
-nat	- the native/na�ve version
-lib	- the library version (see above, which library will be called)
-blk	- the blocked version (takes bs as extra argument)
+* nat	- the native/na�ve version
+* lib	- the library version (see above, which library will be called)
+* blk	- the blocked version (takes bs as extra argument)
 
 as well as mnk, nmk, ... (the permutations).
 
