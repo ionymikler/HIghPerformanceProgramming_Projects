@@ -7,7 +7,7 @@
 //MatrixA is[m, k]
 //MatrixB is[k, n]
 //MatrixC is[m, n]
-void matult_lib(int n, int m, int k, double **A, double **B, double **C){
+void matmult_lib(int m, int n, int k, double **A, double **B, double **C){
     cblas_dgemm(CblasRowMajor,
                 CblasNoTrans,
                 CblasNoTrans,
@@ -17,11 +17,11 @@ void matult_lib(int n, int m, int k, double **A, double **B, double **C){
                 C[0], n);
 }
 
-void matmult_nat(int n, int m, int k, double **A, double **B, double **C)
+void matmult_nat(int m, int n, int k, double **A, double **B, double **C)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < m; i++)
     {
-        for (int j = 0; j < m; j++)
+        for (int j = 0; j < n; j++)
         {
             C[i][j] = 0;
             for (int _k = 0; _k < k; _k++)
