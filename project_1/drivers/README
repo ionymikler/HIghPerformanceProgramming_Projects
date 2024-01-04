@@ -114,14 +114,14 @@ at once, i.e. you can start with e.g. matmult_nat() and add the other
 functions successively as you develop them.
 
 
-Environment variables to control the driver:
+### Environment variables to control the driver:
 
 There are 4 variables that control the behaviour of the driver
 program.  They are
 
-MATMULT_RESULTS={[0]|1}	  - print result matrices (in Matlab format, def: 0)
-MATMULT_COMPARE={0|[1]}   - control result comparison (def: 1)
-MFLOPS_MIN_T=[3.0]        - the minimum run-time (def: 3.0 s)
-MFLOPS_MAX_IT=[infinity]  - max. no of iterations; 
+* `MATMULT_RESULTS={ [0] | 1}`	  - print result matrices (in Matlab format, def: 0)
+* `MATMULT_COMPARE={ 0 | [1] }`   - control result comparison (def: 1)
+* `MFLOPS_MIN_T=[3.0]  `      - the minimum run-time (def: 3.0 s)
+* `MFLOPS_MAX_IT=[infinity]`  - max. no of iterations; 
                             set if you want to do profiling.
 
