@@ -3,8 +3,8 @@
 ### -- specify queue -- 
 #BSUB -q hpc
 
-### -- set the job Name -- 
-#BSUB -J matmul_perms
+### -- set the job Name --
+#BSUB -J matmul_perms_O3
 
 ### -- ask for number of cores (default: 1) -- 
 #BSUB -n 1
@@ -35,34 +35,37 @@
 CC=${1-"gcc"}
 
 # Setup for profiling and comparison
-export MFLOPS_MAX_IT=2
+export MFLOPS_MAX_IT=10
+# export MFLOPS_MIN_T=5
 
-SO_FILE="libmatmult_base.so"
+SO_FILE="libmatmult_O3.so"
 SO_FILE_WITHOUT_EXT=$(basename "$SO_FILE" .so)
 
 RESULTS_FILE="results/${SO_FILE_WITHOUT_EXT}_results.dat"
 LOG_FILE="results/${SO_FILE_WITHOUT_EXT}.log"
+ERR_FILE="results/${SO_FILE_WITHOUT_EXT}.err"
 
-PERMS="mnk nmk mkn nkm kmn knm"
-M="5 10 50 100 250 500 750 1000 1500 2000"
+# PERMS="mnk nmk mkn nkm kmn knm"
+# M="5 10 50 100 250 500 750 1000 1500 2000"
 
-# PERMS="mnk"
-# M="5 10"
+PERMS="mnk mkn"
+M="5 50 250 750 2000"
+# M="5 750"
 
 # cleanup of past runs of the same config
-rm -f ${RESULTS_FILE} ${LOG_FILE} "${SO_FILE_WITHOUT_EXT}.png"
+rm -f ${RESULTS_FILE} ${LOG_FILE} ${ERR_FILE} "${SO_FILE_WITHOUT_EXT}.png"
 
 # bring the correct .so file
 rm -f "libmatmult.so"
 if [ ! -f "./exes/${SO_FILE}" ]; then
-    echo "Error: ./exes/${SO_FILE} does not exist" 2> $LOG_FILE
+    echo "Error: ./exes/${SO_FILE} does not exist" > $ERR_FILE
     exit 1
 fi
 cp "./exes/${SO_FILE}" "./libmatmult.so"
 
 
 if [ ! -f "./libmatmult.so" ]; then
-    echo "Error:  libmatmul.so does not exist" 2> $LOG_FILE
+    echo "Error:  libmatmul.so does not exist" > $ERR_FILE
     exit 1
 fi
 
