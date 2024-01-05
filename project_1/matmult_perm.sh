@@ -73,9 +73,13 @@ fi
 
 echo "Running driver on ${SO_FILE} | $(date)
 " >> $LOG_FILE
-# TODO: include lscpu command | grep 'l1|l2|l3'
+echo "machine specs:" >> $LOG_FILE
+lscpu | grep -E "Model name|L1|L2|L3
+" >>  $LOG_FILE
+
 for perm in $PERMS
 do
+    echo "" >> $LOG_FILE
     for m in $M
     do
         echo "Running $perm with $m $((m+1)) $((m+2)) | $(date)" >> $LOG_FILE
