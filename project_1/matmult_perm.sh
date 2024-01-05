@@ -4,7 +4,7 @@
 #BSUB -q hpc
 
 ### -- set the job Name --
-#BSUB -J matmul_perms_O3
+#BSUB -J matmul_perms_base
 
 ### -- ask for number of cores (default: 1) -- 
 #BSUB -n 1
@@ -38,19 +38,21 @@ CC=${1-"gcc"}
 export MFLOPS_MAX_IT=10
 # export MFLOPS_MIN_T=5
 
-SO_FILE="libmatmult_O3.so"
+SO_FILE="libmatmult_base.so"
+# SO_FILE="libmatmult_O3.so"
+# SO_FILE="libmatmult_O3_fast-math_unroll-loops.so"
+
 SO_FILE_WITHOUT_EXT=$(basename "$SO_FILE" .so)
 
 RESULTS_FILE="results/${SO_FILE_WITHOUT_EXT}_results.dat"
 LOG_FILE="results/${SO_FILE_WITHOUT_EXT}.log"
 ERR_FILE="results/${SO_FILE_WITHOUT_EXT}.err"
 
-# PERMS="mnk nmk mkn nkm kmn knm"
-# M="5 10 50 100 250 500 750 1000 1500 2000"
+PERMS="mnk mkn nmk nkm kmn knm"
+# PERMS="mnk"
 
-PERMS="mnk mkn"
-M="5 50 250 750 2000"
-# M="5 750"
+M="5 10 20 50 100 250 500 750 1000 1500 1800"
+# M="5 50 250 750"
 
 # cleanup of past runs of the same config
 rm -f ${RESULTS_FILE} ${LOG_FILE} ${ERR_FILE} "${SO_FILE_WITHOUT_EXT}.png"
@@ -71,6 +73,7 @@ fi
 
 echo "Running driver on ${SO_FILE} | $(date)
 " >> $LOG_FILE
+# TODO: include lscpu command | grep 'l1|l2|l3'
 for perm in $PERMS
 do
     for m in $M
@@ -84,7 +87,7 @@ done
 
 rm -f "libmatmult.so"
 echo "
-Done. removing libmatmult.so file" >> $LOG_FILE
+Done. removing libmatmult.so file | $(date)" >> $LOG_FILE
 
 exit 0
 
