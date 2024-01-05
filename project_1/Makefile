@@ -1,6 +1,6 @@
 TARGET	= exes/libmatmult_base.so
 TARGET2	= exes/libmatmult_O3.so
-TARGET3	= exes/libmatmult_O3_fast-math_unroll-loops.so
+TARGET3	= exes/libmatmult_O3pp.so
 
 LIBSRCS	= matrix_lib/matmul_permutations.c
 #LIBOBJS	= $(LIBSRCS:.c=.o)
@@ -9,7 +9,7 @@ LIBOBJS = matrix_lib/matmul_permutations.o
 # OPT	= -g
 # OPT = -g -O3
 OPT = -g -O3 -ffast-math -funroll-loops
-# OPT += -fopt-info
+OPT += -fopt-info
 
 PIC	= -fPIC
 

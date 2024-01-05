@@ -16,7 +16,7 @@
 #BSUB -R "rusage[mem=2048]"
 
 ### -- set walltime limit: hh:mm -- 
-#BSUB -W 60
+#BSUB -W 90
 
 ### -- set the email address -- 
 #BSUB -u s222962@dtu.dk
@@ -40,7 +40,7 @@ export MFLOPS_MAX_IT=10
 
 SO_FILE="libmatmult_base.so"
 # SO_FILE="libmatmult_O3.so"
-# SO_FILE="libmatmult_O3_fast-math_unroll-loops.so"
+# SO_FILE="libmatmult_O3pp.so"
 
 SO_FILE_WITHOUT_EXT=$(basename "$SO_FILE" .so)
 
@@ -49,10 +49,10 @@ LOG_FILE="results/${SO_FILE_WITHOUT_EXT}.log"
 ERR_FILE="results/${SO_FILE_WITHOUT_EXT}.err"
 
 PERMS="mnk mkn nmk nkm kmn knm"
-# PERMS="mnk"
+# PERMS="knm"
 
-M="5 10 20 50 100 250 500 750 1000 1500 1800"
-# M="5 50 250 750"
+M="5, 10, 36, 50, 64, 78, 85, 100, 250, 500, 750, 1000, 1500, 1800"
+# M="1500 1800"
 
 # cleanup of past runs of the same config
 rm -f ${RESULTS_FILE} ${LOG_FILE} ${ERR_FILE} "${SO_FILE_WITHOUT_EXT}.png"
@@ -74,8 +74,8 @@ fi
 echo "Running driver on ${SO_FILE} | $(date)
 " >> $LOG_FILE
 echo "machine specs:" >> $LOG_FILE
-lscpu | grep -E "Model name|L1|L2|L3
-" >>  $LOG_FILE
+lscpu | grep -E "Model name|L1|L2|L3" >>  $LOG_FILE
+echo "" >> $LOG_FILE
 
 for perm in $PERMS
 do

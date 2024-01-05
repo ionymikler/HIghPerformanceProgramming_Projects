@@ -1,0 +1,20 @@
+gcc -g -O3 -ffast-math -funroll-loops -fopt-info -fPIC    -c -o matmult_lib.o matmult_lib.c
+matmult_lib.c:8:9: optimized: Loop 2 distributed: split to 0 loops and 1 library calls.
+matmult_lib.c:6:5: optimized: loop unrolled 7 times
+matmult_lib.c:22:13: optimized: loop unrolled 7 times
+matmult_lib.c:34:13: optimized: loop unrolled 7 times mnk
+matmult_lib.c:46:13: optimized: loop unrolled 7 times nmk
+matmult_lib.c:58:13: optimized: loop vectorized using 16 byte vectors
+matmult_lib.c:58:13: optimized:  loop versioned for vectorization because of possible aliasing
+matmult_lib.c:58:13: optimized: loop turned into non-loop; it never loops
+matmult_lib.c:58:13: optimized: loop unrolled 7 times mkn
+matmult_lib.c:58:29: optimized: loop unrolled 7 times 
+matmult_lib.c:70:13: optimized: loop unrolled 3 times nkm
+matmult_lib.c:82:13: optimized: loop vectorized using 16 byte vectors
+matmult_lib.c:82:13: optimized:  loop versioned for vectorization because of possible aliasing
+matmult_lib.c:82:13: optimized: loop turned into non-loop; it never loops
+matmult_lib.c:82:13: optimized: loop unrolled 7 times kmn
+matmult_lib.c:82:29: optimized: loop unrolled 7 times
+matmult_lib.c:94:13: optimized: loop unrolled 3 times knm
+gcc -o exes/libmatmult_O3_fast-math_unroll-loops.so -g -O3 -ffast-math -funroll-loops -fopt-info -shared  matmult_lib.o
+
