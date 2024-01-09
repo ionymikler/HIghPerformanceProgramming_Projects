@@ -1,0 +1,9 @@
+gcc -g -O3 -fopt-info -fPIC    -c -o matmult_lib.o matmult_lib.c
+matmul_lib.c:8:9: optimized: Loop 2 distributed: split to 0 loops and 1 library calls.
+matmul_lib.c:58:13: optimized: loop vectorized using 16 byte vectors
+matmul_lib.c:58:13: optimized:  loop versioned for vectorization because of possible aliasing
+matmul_lib.c:58:13: optimized: loop turned into non-loop; it never loops
+matmul_lib.c:82:13: optimized: loop vectorized using 16 byte vectors
+matmul_lib.c:82:13: optimized:  loop versioned for vectorization because of possible aliasing
+matmul_lib.c:82:13: optimized: loop turned into non-loop; it never loops
+gcc -o exes/libmatmult_O3.so -g -O3 -fopt-info -shared  matmult_lib.o

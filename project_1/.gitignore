@@ -1,1 +1,9 @@
-*pdf
+**.pdf
+**.so
+**.o
+**.log
+**.err
+**.out
+**.dat
+**.png
+.nfs**
