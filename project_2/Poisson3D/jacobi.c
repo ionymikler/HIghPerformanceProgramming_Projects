@@ -2,9 +2,9 @@
  * 
  */
 #include <math.h>
-#include "alloc3d.c"
+#include <stdlib.h>
 
-double ***
+double***
 jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
     //Delta 2 / N where N is the number of points 
     double delta = 2.0 / (double)N;
@@ -40,17 +40,17 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         for (int j = 0; j < N; j++){
             output[0][i][j] = 20;
             output[N-1][i][j] = 20;
-            output[i][0][j] = 0;
             output[i][N-1][j] = 20;
             output[i][j][0] = 20;
             output[i][j][N-1] = 20;
+            output[i][0][j] = 0;
         }
     }
     // boundary (wall)  conditions for input as well 
     input = output;
 
     // Loop through Steps
-    for (int steps = 0; steps < iter_max && dif < tolerance; steps++){ 
+    for (int steps = 0; steps < iter_max; steps++){ 
          for (int i = 1; i < (N-1);i++){
             for (int j = 1; j < (N-1); j++){
                 for (int k = 1; k < (N-1); k++){
@@ -69,11 +69,10 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         }
         // Calculate the difference criteria
         
-        double dif = abs(input[0][0][0] - output[0][0][0]);
+        double dif = 100.0;//abs(input[0][0][0] - output[0][0][0]);
         // Make new input
         input = output;
 
     }
-    return 0;
-
+    return input;
 }

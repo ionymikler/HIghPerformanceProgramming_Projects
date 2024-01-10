@@ -44,20 +44,13 @@ main(int argc, char *argv[]) {
         perror("array u: allocation failed");
         exit(-1);
     }
-    //Create initial u
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
 
-    
-    u = jacobi(***input, ***output, ***f,N,iter_max,tolerance);
-
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
-
-    
-    u = jacobi(input, output, f, N, iter_max, tolerance);
+    /*
+     *
+     * fill in your code here 
+     *
+     *
+     */
 
     // dump  results if wanted 
     switch(output_type) {
