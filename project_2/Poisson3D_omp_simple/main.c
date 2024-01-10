@@ -51,7 +51,7 @@ main(int argc, char *argv[]) {
     double ***f = malloc_3d(N,N,N);
 
     double start_time = omp_get_wtime();
-    u = jacobi(input, output, f,N,iter_max,tolerance);
+    jacobi(u, output, f,N,iter_max,tolerance);
     double end_time = omp_get_wtime();
 
     printf("Time is %lf seconds\n", end_time - start_time);

@@ -1,14 +1,15 @@
+/* jacobi.c - Poisson problem in 3d
+ * 
+ */
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-double***
+void
 jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
     // delta = 2 / N where N is the number of points 
     double delta = 2.0 / (double)N;
     double dif = 10000.0;
-    double min_dif = .01;
-    int max_step = 100;
 
     // calculate extend of the heater location 
     int max_x_location = floor((double)N *5/16);
@@ -65,22 +66,22 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
             for (int j = 1; j < (N-1); j++){
                 for (int k = 1; k < (N-1); k++){
                 // calculate new value
-                    
-                    output[i][j][k] = (input[i-1][j][k] + 
+                    double h = 1/6.0;
+                    output[i][j][k] = h * (input[i-1][j][k] + 
                                     input[i+1][j][k] +
                                     input[i][j-1][k] +
                                     input[i][j+1][k] + 
                                     input[i][j][k-1] +
                                     input[i][j][k+1] +
-                                    pow(delta,2) * f[i][j][k])/ 6.0;
+                                    delta * delta * f[i][j][k]);
                                                     
                 
-                    dif += pow(output[i][j][k] - input[i][j][k], 2);
+                    dif += (output[i][j][k] - input[i][j][k]) * (output[i][j][k] - input[i][j][k]);
                 }
             }
         }
         dif = sqrt(dif);
-        printf("dif %lf\n", dif);
+        printf("dif: %lf\n", dif);
         #pragma omp parallel for
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -91,5 +92,4 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         }
         steps++;
     }
-    return input;
 }
