@@ -36,10 +36,10 @@ void populate_walls(double ***p, int N, double temp){
     }
 }
 
-void init_cube(double ***p, int N){
+void init_cube(double ***p, int N, double start_T){
     // fill all values to zero
     int range_all[6] = {0,N-1,0,N-1,0,N-1};
-    populate_range(p,range_all,0);
+    populate_range(p,range_all,start_T);
 
     populate_walls(p, N, 20);
 }
@@ -49,6 +49,7 @@ void init_force(double ***f, int N){
     int rad_x_s=0, rad_x_e=floor(5*N/16);
     int rad_y_s=0, rad_y_e=floor(N/4);
     int rad_z_s=ceil(N/2), rad_z_e=floor(N/2);
+
     int radiator_range[6] = {rad_x_s, rad_x_e, rad_y_s, rad_y_e, rad_z_s, rad_z_e};
     populate_range(f,radiator_range,200);
 }

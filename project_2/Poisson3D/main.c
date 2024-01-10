@@ -21,11 +21,13 @@
 int
 main(int argc, char *argv[]) {
 
+    // Default parameters
     int 	N = N_DEFAULT;
     int 	iter_max = 1000;
-    double	tolerance;
-    double	start_T;
+    double	tolerance = 0.01;
+    double	start_T = 10; // mid of 0 and 20
     int		output_type = 4;
+
     char	*output_prefix = "poisson_res";
     char        *output_ext    = "";
     char	output_filename[FILENAME_MAX];
@@ -54,15 +56,16 @@ main(int argc, char *argv[]) {
     }
 
     // Init the u cube
-    init_cube(u, N);
+    init_cube(u, N, start_T);
     
     // init force
     init_force(f, N);
 
-    // u = jacobi(input, output, f, N, iter_max, tolerance);
+    #ifdef _GAUSS_SEIDEL
+    gauss_seidel(u,f, N,iter_max, tolerance);
+    #else
+    jacobi(input, output, f, N, iter_max, tolerance);
 
-    // printf("value of u at 1,1,1: %f\n",u[1][1][1]);
-    
     // dump  results if wanted 
     switch(output_type) {
 	case 0:
