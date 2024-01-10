@@ -14,7 +14,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 100
+#define N_DEFAULT 6
 
 int
 main(int argc, char *argv[]) {
@@ -45,13 +45,14 @@ main(int argc, char *argv[]) {
         exit(-1);
     }
 
-    /*
-     *
-     * fill in your code here 
-     *
-     *
-     */
+    // <own code starts here>
+    // populate vector
+    int ran[6] = {0,5,0,5,0,5};
+    populate_range(u, ran, 5);
+    // populate_range(u, 1);
 
+    printf("value of u at 1,1,1: %f\n",u[1][1][1]);
+    
     // dump  results if wanted 
     switch(output_type) {
 	case 0:
@@ -66,7 +67,7 @@ main(int argc, char *argv[]) {
 	case 4:
 	    output_ext = ".vtk";
 	    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-	    fprintf(stderr, "Write VTK file to %s: ", output_filename);
+	    fprintf(stderr, "Write VTK file to %s:\n", output_filename);
 	    print_vtk(output_filename, N, u);
 	    break;
 	default:
