@@ -14,7 +14,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 100
+#define N_DEFAULT 6
 
 int
 main(int argc, char *argv[]) {
@@ -73,7 +73,7 @@ main(int argc, char *argv[]) {
 	case 4:
 	    output_ext = ".vtk";
 	    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-	    fprintf(stderr, "Write VTK file to %s: ", output_filename);
+	    fprintf(stderr, "Write VTK file to %s:\n", output_filename);
 	    print_vtk(output_filename, N, u);
 	    break;
 	default:
