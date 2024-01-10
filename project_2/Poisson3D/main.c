@@ -16,7 +16,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 5
+#define N_DEFAULT 10
 
 int
 main(int argc, char *argv[]) {
@@ -26,14 +26,14 @@ main(int argc, char *argv[]) {
     int 	iter_max = 1000;
     double	tolerance = 0.01;
     double	start_T = 10; // mid of 0 and 20
-    int		output_type = 0;
+    int		output_type = 4;
 
     char	*output_prefix = "poisson_res";
-    char        *output_ext    = "";
+    char    *output_ext    = "";
     char	output_filename[FILENAME_MAX];
     double 	***u = NULL;
     double 	***output_u = NULL;
-    double ***f =  NULL;
+    double  ***f =  NULL;
 
 
     /* get the paramters from the command line */
@@ -75,11 +75,13 @@ main(int argc, char *argv[]) {
     // init force
     init_force(f, N);
 
+    printf("\nrunning solver\n");
     #ifdef _JACOBI
     jacobi(u, output_u, f, N, iter_max, tolerance);
     #else
     gauss_seidel(u,f, N,iter_max, tolerance);
     #endif
+    printf("\nsolver done\n");
 
     // dump  results if wanted 
     switch(output_type) {
@@ -105,6 +107,10 @@ main(int argc, char *argv[]) {
 
     // de-allocate memory
     free_3d(u);
+    free_3d(f);
+    #ifdef _JACOBI
+    free_3d(output_u);
+    #endif
 
     return(0);
 }
