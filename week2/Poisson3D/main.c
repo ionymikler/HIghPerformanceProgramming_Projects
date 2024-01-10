@@ -14,7 +14,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 6
+#define N_DEFAULT 100
 
 int
 main(int argc, char *argv[]) {
@@ -44,24 +44,14 @@ main(int argc, char *argv[]) {
         perror("array u: allocation failed");
         exit(-1);
     }
-    //Create initial u
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
 
+    /*
+     *
+     * fill in your code here 
+     *
+     *
+     */
 
-    
-    u = jacobi(***input, ***output, ***f,N,iter_max,tolerance);
-
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
-
-    
-    u = jacobi(input, output, f, N, iter_max, tolerance);
-
-    printf("value of u at 1,1,1: %f\n",u[1][1][1]);
-    
     // dump  results if wanted 
     switch(output_type) {
 	case 0:
@@ -76,7 +66,7 @@ main(int argc, char *argv[]) {
 	case 4:
 	    output_ext = ".vtk";
 	    sprintf(output_filename, "%s_%d%s", output_prefix, N, output_ext);
-	    fprintf(stderr, "Write VTK file to %s:\n", output_filename);
+	    fprintf(stderr, "Write VTK file to %s: ", output_filename);
 	    print_vtk(output_filename, N, u);
 	    break;
 	default:
