@@ -3,6 +3,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 #include <math.h>
 #include "alloc3d.h"
 #include "cube_utils.h"

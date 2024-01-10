@@ -1,6 +1,3 @@
-/* jacobi.c - Poisson problem in 3d
- * 
- */
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,6 +20,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     
     
     // create the first 3D matrix
+    #pragma omp parallel for
     for (int i = 0; i < N;i++){
         for (int j = 0; j < N; j++){
             for (int k = 0; k < N; k++){           
@@ -38,6 +36,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
 
     // initialize the boundary values for the output
     // these will not be overwritten in the subsequent loops 
+    #pragma omp parallel for
     for (int i = 0; i < N; i++){
         for (int j = 0; j < N; j++){
             output[0][i][j] = 20;
@@ -49,6 +48,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         }
     }
     // boundary (wall)  conditions for input as well 
+    #pragma omp parallel for
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             for (int k = 0; k < N; k++) {
@@ -60,6 +60,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     int steps = 0;
     while ( steps < iter_max && dif > tolerance){
         dif = 0;
+        #pragma omp parallel for
          for (int i = 1; i < (N-1);i++){
             for (int j = 1; j < (N-1); j++){
                 for (int k = 1; k < (N-1); k++){
@@ -79,7 +80,8 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
             }
         }
         dif = sqrt(dif);
-
+        printf("dif %lf\n", dif);
+        #pragma omp parallel for
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 for (int k = 0; k < N; k++) {
