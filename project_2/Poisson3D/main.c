@@ -50,14 +50,7 @@ main(int argc, char *argv[]) {
     double ***f = malloc_3d(N,N,N);
 
     
-    u = jacobi(***input, ***output, ***f,N,iter_max,tolerance);
-
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
-
-    
-    u = jacobi(input, output, f, N, iter_max, tolerance);
+    u = jacobi(input, output, f,N,iter_max,tolerance);
 
     // dump  results if wanted 
     switch(output_type) {
