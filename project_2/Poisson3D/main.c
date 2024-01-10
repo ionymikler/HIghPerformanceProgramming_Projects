@@ -3,7 +3,9 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "alloc3d.h"
+#include "cube_utils.h"
 #include "print.h"
 
 #ifdef _JACOBI
@@ -14,7 +16,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 6
+#define N_DEFAULT 20
 
 int
 main(int argc, char *argv[]) {
@@ -23,44 +25,43 @@ main(int argc, char *argv[]) {
     int 	iter_max = 1000;
     double	tolerance;
     double	start_T;
-    int		output_type = 0;
+    int		output_type = 4;
     char	*output_prefix = "poisson_res";
     char        *output_ext    = "";
     char	output_filename[FILENAME_MAX];
     double 	***u = NULL;
+    double ***f =  NULL;
 
 
     /* get the paramters from the command line */
-    N         = atoi(argv[1]);	// grid size
-    iter_max  = atoi(argv[2]);  // max. no. of iterations
-    tolerance = atof(argv[3]);  // tolerance
-    start_T   = atof(argv[4]);  // start T for all inner grid points
-    if (argc == 6) {
-	output_type = atoi(argv[5]);  // ouput type
-    }
+    // N         = atoi(argv[1]);	// grid size
+    // iter_max  = atoi(argv[2]);  // max. no. of iterations
+    // tolerance = atof(argv[3]);  // tolerance
+    // start_T   = atof(argv[4]);  // start T for all inner grid points
+    // if (argc == 6) {
+	// output_type = atoi(argv[5]);  // ouput type
+    // }
 
     // allocate memory
     if ( (u = malloc_3d(N, N, N)) == NULL ) {
         perror("array u: allocation failed");
         exit(-1);
     }
-    //Create initial u
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
+    // Create cube u and force f
+    if ( (f = malloc_3d(N, N, N)) == NULL ) {
+        perror("array f: allocation failed");
+        exit(-1);
+    }
 
-
+    // Init the u cube
+    init_cube(u, N);
     
-    u = jacobi(***input, ***output, ***f,N,iter_max,tolerance);
+    // init force
+    init_force(f, N);
 
-    double ***input = malloc_3d(N,N,N);
-    double ***output = malloc_3d(N,N,N);
-    double ***f = malloc_3d(N,N,N);
+    // u = jacobi(input, output, f, N, iter_max, tolerance);
 
-    
-    u = jacobi(input, output, f, N, iter_max, tolerance);
-
-    printf("value of u at 1,1,1: %f\n",u[1][1][1]);
+    // printf("value of u at 1,1,1: %f\n",u[1][1][1]);
     
     // dump  results if wanted 
     switch(output_type) {

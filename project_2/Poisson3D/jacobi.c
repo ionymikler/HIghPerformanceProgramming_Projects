@@ -17,9 +17,6 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     int max_y_location = floor((double)N *-1/2);
     int min_z_location = floor((double)N *-2/3);
     int max_z_location = 0;
-
-
-    
     
     // Create the first 3D matrix, all values are initialized to zero
     for (int i = 0; i < N;i++){
