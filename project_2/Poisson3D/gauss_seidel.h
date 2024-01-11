@@ -3,8 +3,8 @@
  */
 #ifndef _GAUSS_SEIDEL_H
 #define _GAUSS_SEIDEL_H
-
+#include <stdbool.h>
 void
-gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance);
+gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance, bool verbose);
 
 #endif

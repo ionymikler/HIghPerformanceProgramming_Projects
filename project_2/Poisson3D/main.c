@@ -3,6 +3,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <omp.h>
 #include <math.h>
 #include "alloc3d.h"
@@ -27,7 +28,9 @@ main(int argc, char *argv[]) {
     int 	iter_max = 5000;
     double	tolerance = 1e-5;
     double	start_T = 10; // mid of 0 and 20
-    int		output_type = 4;
+    int		output_type = 0;
+    bool    verbose = false;
+    int     thread_num = 1;
 
     char	*output_prefix = "poisson_res";
     char    *output_ext    = "";
@@ -39,25 +42,25 @@ main(int argc, char *argv[]) {
 
     /* get the paramters from the command line */
     N         = atoi(argv[1]);	// grid size
-    // iter_max  = atoi(argv[2]);  // max. no. of iterations
-    // tolerance = atof(argv[3]);  // tolerance
-    // start_T   = atof(argv[4]);  // start T for all inner grid points
-    // if (argc == 6) {
-	// output_type = atoi(argv[5]);  // ouput type
-    // }
+    iter_max  = atoi(argv[2]);  // max. no. of iterations
+    tolerance = atof(argv[3]);  // tolerance
+    start_T   = atof(argv[4]);  // start T for all inner grid points
+    thread_num = atoi(argv[5]);  // number of threads
+    verbose   = atoi(argv[6]);  // verbose output
+    if (argc == 8) {
+	output_type = atoi(argv[7]);  // ouput type
+    }
 
     int t_num=4;
     omp_set_num_threads(t_num);
 
     // print parameters:
-    printf("-- Poisson solver ---\n");
-    printf("-- solver Parameters---\n");
-    printf("N: %d\n",N);
-    printf("iter max: %d\n", iter_max);
-    printf("tolerance: %f\n", tolerance);
-    
-    printf("-- solver Parameters---\n");
-    printf("thread number: %d\n",t_num);
+    if (verbose){
+        printf("-- Poisson solver ---\n");
+        print_params(N, iter_max, tolerance, start_T, thread_num, verbose);
+        
+        printf("Number of threads: %d\n",t_num);
+    }
 
     // allocate memory
     if ( (u = malloc_3d(N, N, N)) == NULL ) {
@@ -81,29 +84,48 @@ main(int argc, char *argv[]) {
     #endif
 
     // Init the u cube
+    // TODO: add sanity check of high temp in corners
     init_cube(u, N, start_T);
     
     // init force
     init_force(f, N);
 
-    printf("\nrunning solver\n");
+    if (verbose){printf("\nrunning solver\n");}
+    // TODO: make into function
     double time_start,time_end;
     time_start = omp_get_wtime();
     #ifdef _JACOBI
+    if (verbose){printf("runnig Jacobi\n");}
     init_cube(output_u, N, start_T);
-    jacobi(u, output_u, f, N, iter_max, tolerance);
+    jacobi(u, output_u, f, N, iter_max, tolerance, verbose);
     #else
-    gauss_seidel(u,f, N,iter_max, tolerance);
+    if (verbose){printf("runnig Gauss-Seidel\n");}
+    gauss_seidel(u,f, N,iter_max, tolerance, verbose);
     #endif
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
 
-    printf("\nsolver done\n");
-    printf("-- solver Parameters---\n");
-    printf("N: %d\n",N);
-    printf("iter max: %d\n", iter_max);
-    printf("tolerance: %f\n", tolerance);
-    printf("wall time: %f\n",time_total);
+
+    // TODO: make into function
+    // calculate MFLOPS and MLUP/s
+    if (verbose){
+        printf("\nsolver done\n");
+        print_params(N, iter_max, tolerance, start_T, thread_num, verbose);
+        printf("wall time: %f\n",time_total);
+
+        printf("Sanity check");
+        sum_u(u,N);
+
+    }else{
+        // to logfile
+        #ifdef _JACOBI
+            char *algo = "Jacobi";
+        #else
+            char *algo = "Gauss-Seidel";
+        #endif
+        printf("%s,%d,%d,%d,%f,%f\n",
+        algo, N, thread_num, iter_max, tolerance, time_total);
+    }
 
     // dump  results if wanted 
     switch(output_type) {

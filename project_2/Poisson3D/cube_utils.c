@@ -1,5 +1,7 @@
-#include "cube_utils.h"
+#include <stdio.h>
+#include <stdbool.h>
 #include <math.h>
+#include "cube_utils.h"
 
 void populate_range(double ***p, int startsEnds[6], double val){
     int x_s = startsEnds[0];
@@ -52,4 +54,27 @@ void init_force(double ***f, int N){
 
     int radiator_range[6] = {rad_x_s, rad_x_e, rad_y_s, rad_y_e, rad_z_s, rad_z_e};
     populate_range(f,radiator_range,200);
+}
+
+void sum_u(double ***u, int N){
+    double sum = 0;
+    for (int i = 0; i < N; i++){
+        for (int j = 0; j < N; j++){
+            for (int k=0; k<N; k++){
+                sum += u[i][j][k];
+            }
+        }
+    }
+
+    printf("sum of u: %f\n",sum);
+}
+
+void print_params(int N, int iter_max, double tolerance, double start_T,int thread_num, bool verbose){
+    printf("-- solver Parameters---\n");
+    printf("N: %d\n",N);
+    printf("iter max: %d\n", iter_max);
+    printf("tolerance: %f\n", tolerance);
+    printf("start_T: %f\n", start_T);
+    printf("thread_num: %d\n", thread_num);
+    printf("verbose: %s\n", verbose?"yes":"no"); 
 }

@@ -2,12 +2,13 @@
  * 
  */
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
 
 void
-jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
+jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance, bool verbose) {
     // delta = 2 / N where N is the number of points 
     double delta = 2.0 / (double)N;
     double dif = 10000.0;
@@ -44,14 +45,16 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
             }
         }
 
-        if (steps % 100 == 0){
+        if (steps % 100 == 0 && verbose){
             printf("iter: %d, diff_avg: %f\n",steps, dif);
         }
         steps++;
     }
-    char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
     
-    printf("--- Iterations stopped ---\n");
-    printf("reason: %s\n",reason);
-    printf("Iteration: %d, dif: %f\n", steps, dif);
+    if (verbose){
+        char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
+        printf("--- Iterations stopped ---\n");
+        printf("reason: %s\n",reason);
+        printf("Iteration: %d, dif: %f\n", steps, dif);
+    }
 }

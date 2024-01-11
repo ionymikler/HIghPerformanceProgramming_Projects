@@ -1,5 +1,4 @@
 # Makefile
-#
 TARGET_J  = poisson_j		# Jacobi
 TARGET_GS = poisson_gs		# Gauss-Seidel
 
@@ -24,6 +23,13 @@ PARA	=
 CFLAGS	= $(DEFS) $(ARCH) $(OPT) $(ISA) $(CHIP) $(IPO) $(PARA) $(XOPTS)
 LDFLAGS = -lm 
 
+# Default run values
+N = 64
+ITER_MAX = 5000
+TOL = 1e-5
+START_T = 10.0
+VERBOSE = 1 # 0 = no, 1 = yes
+
 all: $(TARGET_J) $(TARGET_GS) 
 
 $(TARGET_J): $(OBJECTS) $(OBJS_J)
@@ -39,10 +45,21 @@ $(MAIN_GS):
 	$(CC) -o $@ -D_GAUSS_SEIDEL $(CFLAGS) -c main.c 
 
 clean:
-	@/bin/rm -f core *.o *~
+	@/bin/rm -f core *.o *~ *.vtk
 
 realclean: clean
 	@/bin/rm -f $(TARGET_J)  $(TARGET_GS)
+
+clean_r:
+	@/bin/echo "Cleaning results directory"
+	@/bin/rm -f results/*
+
+run_default_j:
+	./$(TARGET_J) $(N) $(ITER_MAX) $(TOL) $(START_T) $(VERBOSE)
+
+submit:
+	@/bin/rm -f *.out
+	bsub < testing/job_script.sh
 
 # DO NOT DELETE
 
