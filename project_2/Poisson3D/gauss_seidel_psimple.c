@@ -47,18 +47,6 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
     }
 }
 
-void sum_u(double ***u, int N){
-    double sum = 0;
-    for (int i = 0; i < N;i++){
-        for (int j = 0; j < N; j++){
-            for (int k = 0; k < N; k++){
-                sum += u[i][j][k];
-            }
-        }
-    }
-    printf("sum of u: %f\n",sum);
-}
-
 void
 gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
     printf("%s\n","running gs");

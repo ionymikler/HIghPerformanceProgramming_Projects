@@ -58,7 +58,6 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
         }
         iter++;
     }
-
     // Printing of results
 
     char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";

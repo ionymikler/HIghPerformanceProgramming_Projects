@@ -19,6 +19,15 @@
 
 #define N_DEFAULT 100
 
+
+void print_params(int N, int iter_max, double tolerance, int t_num){
+    printf("-- solver Parameters---\n");
+    printf("N: %d\n",N);
+    printf("iter max: %d\n", iter_max);
+    printf("tolerance: %f\n", tolerance);
+    printf("thread number: %d\n",t_num);
+}
+
 int
 main(int argc, char *argv[]) {
 
@@ -52,12 +61,7 @@ main(int argc, char *argv[]) {
     // print parameters:
     printf("-- Poisson solver ---\n");
     printf("-- solver Parameters---\n");
-    printf("N: %d\n",N);
-    printf("iter max: %d\n", iter_max);
-    printf("tolerance: %f\n", tolerance);
-    
-    printf("-- solver Parameters---\n");
-    printf("thread number: %d\n",t_num);
+    print_params(N, iter_max, tolerance, t_num);
 
     // allocate memory
     if ( (u = malloc_3d(N, N, N)) == NULL ) {
@@ -98,13 +102,17 @@ main(int argc, char *argv[]) {
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
 
+    // print results
     printf("\nsolver done\n");
     printf("-- solver Parameters---\n");
-    printf("N: %d\n",N);
-    printf("iter max: %d\n", iter_max);
-    printf("tolerance: %f\n", tolerance);
-    printf("wall time: %f\n",time_total);
+    print_params(N, iter_max, tolerance, t_num);
 
+    printf("--- %s ---\n","Sanity check");
+    sum_u(u,N);
+
+    // print results
+    printf("--- results ---\n");
+    printf("tolerance: %f\n", tolerance);
     // dump  results if wanted 
     switch(output_type) {
 	case 0:

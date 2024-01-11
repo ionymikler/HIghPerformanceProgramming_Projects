@@ -1,5 +1,7 @@
 # Makefile
 #
+# .PHONY: all clean realclean get_gs_seq get_gs_psimple
+N = 20
 TARGET_J  = poisson_j		# Jacobi
 TARGET_GS = poisson_gs		# Gauss-Seidel
 
@@ -39,10 +41,21 @@ $(MAIN_GS):
 	$(CC) -o $@ -D_GAUSS_SEIDEL $(CFLAGS) -c main.c 
 
 clean:
-	@/bin/rm -f core *.o *~
+	@/bin/rm -f core *.o *~ *.vtk
 
 realclean: clean
 	@/bin/rm -f $(TARGET_J)  $(TARGET_GS)
+
+# custom target
+get_gs_seq:
+	@/bin/echo "replacing gauss_seidel.c with gauss_seidel_seq.c"
+	@/bin/cp -f gauss_seidel_seq.c gauss_seidel.c
+
+get_gs_psimple:
+	@/bin/echo "replacing gauss_seidel.c with gauss_seidel_psimple.c"
+	@/bin/cp -f gauss_seidel_psimple.c gauss_seidel.c
+
+
 
 # DO NOT DELETE
 
