@@ -9,14 +9,15 @@
 #include "alloc3d.h"
 #include "cube_utils.h"
 #include "print.h"
+#include "solver.h"
 
-#ifdef _JACOBI
-#include "jacobi.h"
-#endif
+// #ifdef _JACOBI
+// #include "jacobi.h"
+// #endif
 
-#ifdef _GAUSS_SEIDEL
-#include "gauss_seidel.h"
-#endif
+// #ifdef _GAUSS_SEIDEL
+// #include "gauss_seidel.h"
+// #endif
 
 #define N_DEFAULT 100
 
@@ -57,7 +58,7 @@ main(int argc, char *argv[]) {
     // print parameters:
     if (verbose){
         printf("-- Poisson solver ---\n");
-        print_params(N, iter_max, tolerance, start_T, thread_num, verbose);
+        print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
         
         printf("Number of threads: %d\n",t_num);
     }
@@ -78,30 +79,21 @@ main(int argc, char *argv[]) {
         perror("array u: allocation failed");
         exit(-1);
     }
+    init_cube(output_u, N, start_T);
     output_prefix = "jacobi_res";
     #else
     output_prefix = "gauss_seidel_res";
     #endif
 
     // Init the u cube
-    // TODO: add sanity check of high temp in corners
-    init_cube(u, N, start_T);
-    
+    init_cube(u, N, start_T); // TODO: add sanity check of high temp in corners
     // init force
     init_force(f, N);
 
     if (verbose){printf("\nrunning solver\n");}
-    // TODO: make into function
     double time_start,time_end;
     time_start = omp_get_wtime();
-    #ifdef _JACOBI
-    if (verbose){printf("runnig Jacobi\n");}
-    init_cube(output_u, N, start_T);
-    jacobi(u, output_u, f, N, iter_max, tolerance, verbose);
-    #else
-    if (verbose){printf("runnig Gauss-Seidel\n");}
-    gauss_seidel(u,f, N,iter_max, tolerance, verbose);
-    #endif
+    solve(N, iter_max, tolerance, u, output_u, f, verbose);
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
 
@@ -110,7 +102,9 @@ main(int argc, char *argv[]) {
     // calculate MFLOPS and MLUP/s
     if (verbose){
         printf("\nsolver done\n");
-        print_params(N, iter_max, tolerance, start_T, thread_num, verbose);
+        print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
+
+        printf("--- Results ---\n");
         printf("wall time: %f\n",time_total);
 
         printf("Sanity check");

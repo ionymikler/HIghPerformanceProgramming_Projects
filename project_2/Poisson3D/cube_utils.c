@@ -1,3 +1,6 @@
+/* cube_utils.c - Poisson problem in 3D
+ *
+ */
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
@@ -69,12 +72,13 @@ void sum_u(double ***u, int N){
     printf("sum of u: %f\n",sum);
 }
 
-void print_params(int N, int iter_max, double tolerance, double start_T,int thread_num, bool verbose){
+void print_params(int N, int iter_max, double tolerance, double start_T,int thread_num, bool verbose, int output_type){
     printf("-- solver Parameters---\n");
     printf("N: %d\n",N);
     printf("iter max: %d\n", iter_max);
     printf("tolerance: %f\n", tolerance);
     printf("start_T: %f\n", start_T);
     printf("thread_num: %d\n", thread_num);
-    printf("verbose: %s\n", verbose?"yes":"no"); 
+    printf("verbose: %s\n", verbose?"yes":"no");
+    printf("output_type: %d\n", output_type);
 }

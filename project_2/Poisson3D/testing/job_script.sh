@@ -38,6 +38,7 @@ TOL=1e-5
 INIT_TEMP=10
 THREAD_NUM=1
 VERBOSE=0 # 0 = no, 1 = yes
+OUTPUT_TYPE=4 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
 Ns="10 20 30" # Start small, check times
@@ -46,8 +47,8 @@ THREAD_NUMS="1"
 EXEs="poisson_j poisson_gs"
 # EXEs="poisson_gs"
 
-# TODO: Think this better
-RESULTS_FILE="results/results.txt"
+TIME=$(date +"%H:%M:%S")
+RESULTS_FILE="results/results_${TIME}.txt"
 
 # environment info
 echo "Current working directory: $(pwd)"
@@ -71,7 +72,7 @@ for EXE in $EXEs; do
         for N in $Ns; do
             if [ -n "$N" ]; then
                 echo "    Running $EXE with N=$N, thread_num=$THREAD_NUM"
-                ./$EXE $N $ITER_MAX $TOL $INIT_TEMP $THREAD_NUM $VERBOSE >> $RESULTS_FILE
+                ./$EXE $N $ITER_MAX $TOL $INIT_TEMP $THREAD_NUM $VERBOSE $OUTPUT_TYPE >> $RESULTS_FILE
             fi
         done
     done
