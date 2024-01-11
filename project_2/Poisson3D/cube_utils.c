@@ -48,7 +48,7 @@ void init_force(double ***f, int N){
     // Calculate extend of the heater location
     int rad_x_s=0, rad_x_e=floor(5*N/16);
     int rad_y_s=0, rad_y_e=floor(N/4);
-    int rad_z_s=ceil(N/2), rad_z_e=floor(N/2);
+    int rad_z_s=ceil(N/6), rad_z_e=floor(N/2);
 
     int radiator_range[6] = {rad_x_s, rad_x_e, rad_y_s, rad_y_e, rad_z_s, rad_z_e};
     populate_range(f,radiator_range,200);
