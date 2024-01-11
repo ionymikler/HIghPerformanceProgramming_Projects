@@ -16,7 +16,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 20
+#define N_DEFAULT 10
 
 int
 main(int argc, char *argv[]) {
@@ -29,10 +29,11 @@ main(int argc, char *argv[]) {
     int		output_type = 4;
 
     char	*output_prefix = "poisson_res";
-    char        *output_ext    = "";
+    char    *output_ext    = "";
     char	output_filename[FILENAME_MAX];
     double 	***u = NULL;
-    double ***f =  NULL;
+    double 	***output_u = NULL;
+    double  ***f =  NULL;
 
 
     /* get the paramters from the command line */
@@ -43,6 +44,12 @@ main(int argc, char *argv[]) {
     // if (argc == 6) {
 	// output_type = atoi(argv[5]);  // ouput type
     // }
+
+    // print parameters:
+    printf("-- Poisson solver ---\n");
+    printf("N: %d\n",N);
+    printf("iter max: %d\n", iter_max);
+    printf("tolerance: %f\n", tolerance);
 
     // allocate memory
     if ( (u = malloc_3d(N, N, N)) == NULL ) {
@@ -55,16 +62,26 @@ main(int argc, char *argv[]) {
         exit(-1);
     }
 
+    #ifdef _JACOBI
+    if ( (output_u = malloc_3d(N, N, N)) == NULL ) {
+        perror("array u: allocation failed");
+        exit(-1);
+    }
+    #endif
+
     // Init the u cube
     init_cube(u, N, start_T);
     
     // init force
     init_force(f, N);
 
-    #ifdef _GAUSS_SEIDEL
-    gauss_seidel(u,f, N,iter_max, tolerance);
+    printf("\nrunning solver\n");
+    #ifdef _JACOBI
+    jacobi(u, output_u, f, N, iter_max, tolerance);
     #else
-    jacobi(input, output, f, N, iter_max, tolerance);
+    gauss_seidel(u,f, N,iter_max, tolerance);
+    #endif
+    printf("\nsolver done\n");
 
     // dump  results if wanted 
     switch(output_type) {
@@ -90,6 +107,10 @@ main(int argc, char *argv[]) {
 
     // de-allocate memory
     free_3d(u);
+    free_3d(f);
+    #ifdef _JACOBI
+    free_3d(output_u);
+    #endif
 
     return(0);
 }
