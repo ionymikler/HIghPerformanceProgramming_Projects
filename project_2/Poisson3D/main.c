@@ -3,6 +3,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 #include <math.h>
 #include "alloc3d.h"
 #include "cube_utils.h"
@@ -77,6 +78,7 @@ main(int argc, char *argv[]) {
 
     printf("\nrunning solver\n");
     #ifdef _JACOBI
+    init_cube(output_u, N, start_T);
     jacobi(u, output_u, f, N, iter_max, tolerance);
     #else
     gauss_seidel(u,f, N,iter_max, tolerance);
