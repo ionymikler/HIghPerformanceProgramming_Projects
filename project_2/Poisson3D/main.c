@@ -74,24 +74,30 @@ main(int argc, char *argv[]) {
     if ( (output_u = malloc_3d(N, N, N)) == NULL ) {
         perror("array u: allocation failed");
         exit(-1);
+    }else{
+        printf("output_u allocated\n");
     }
     init_cube(output_u, N, start_T);
+    output_prefix = "poisson_res_jacobi";
+    #else
+    output_prefix = "poisson_res_gauss_seidel";
     #endif
 
     // Init the u cube
     init_cube(u, N, start_T);
     
     // init force
-    init_force(f, N);
+    // init_force(f, N);
 
     printf("\nrunning solver\n");
     double time_s=omp_get_wtime(),time_e,time_total;
+
     #ifdef _JACOBI
     jacobi(u, output_u, f, N, iter_max, tolerance);
     #else
     gauss_seidel(u,f, N,iter_max, tolerance);
     #endif
-    printf("\nsolver done\n");
+    printf("\n---solver done---\n");
     time_e = omp_get_wtime();
     time_total = (time_e - time_s);
     printf("wall time: %f\n",time_total);

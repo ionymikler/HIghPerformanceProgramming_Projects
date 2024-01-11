@@ -39,7 +39,7 @@ $(MAIN_GS):
 	$(CC) -o $@ -D_GAUSS_SEIDEL $(CFLAGS) -c main.c 
 
 clean:
-	@/bin/rm -f core *.o *~
+	@/bin/rm -f core *.o *~ *.vtk
 
 realclean: clean
 	@/bin/rm -f $(TARGET_J)  $(TARGET_GS)

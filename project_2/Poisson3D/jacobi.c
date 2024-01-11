@@ -9,6 +9,7 @@
 void
 jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
     // delta = 2 / N where N is the number of points 
+    printf("%s\n", "jacobi");
     double delta = 2.0 / (double)N;
     double dif = 10000.0;
     double h = 1/6.0;
