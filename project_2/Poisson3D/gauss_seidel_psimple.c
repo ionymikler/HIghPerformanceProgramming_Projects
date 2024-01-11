@@ -15,9 +15,7 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
     double delta = 2.0 / (double)N;
     int t_id = omp_get_thread_num();
 
-    #pragma omp for ordered(2) \
-        private(u_old) \
-        // firstprivate(sqr_diff_acum)
+    #pragma omp for ordered(2) private(u_old)
     for (int i = 1; i < (N-1);i++){
         for (int j = 1; j < (N-1); j++){
             #pragma omp ordered \
@@ -49,13 +47,20 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
     }
 }
 
+void sum_u(double ***u, int N){
+    double sum = 0;
+    for (int i = 0; i < N;i++){
+        for (int j = 0; j < N; j++){
+            for (int k = 0; k < N; k++){
+                sum += u[i][j][k];
+            }
+        }
+    }
+    printf("sum of u: %f\n",sum);
+}
+
 void
 gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
-    /*
-        NOTE: length of cube is from -1 to 1, so 2
-        delta is length/N -> 2/N
-    */
-
     printf("%s\n","running gs");
     double time_start,time_end;
     int iter=0;
@@ -78,6 +83,9 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
     }
     char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
     
+    //sanity check: sum of u should be the same in parallel and sequential
+    sum_u(u,N);
+    
     // Printing of results
     printf("\n--- Iterations stopped ---\n");
     printf("reason: %s\n",reason);
@@ -85,6 +93,6 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
 
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
-    printf("wall time: %f\n",time_total); // deal with this for parallel
+    printf("wall time: %f\n",time_total);
 }
 
