@@ -17,7 +17,7 @@
 #include "gauss_seidel.h"
 #endif
 
-#define N_DEFAULT 10
+#define N_DEFAULT 100
 
 int
 main(int argc, char *argv[]) {
@@ -46,7 +46,7 @@ main(int argc, char *argv[]) {
 	// output_type = atoi(argv[5]);  // ouput type
     // }
 
-    int t_num=2;
+    int t_num=4;
     omp_set_num_threads(t_num);
 
     // print parameters:
@@ -75,6 +75,9 @@ main(int argc, char *argv[]) {
         perror("array u: allocation failed");
         exit(-1);
     }
+    output_prefix = "jacobi_res";
+    #else
+    output_prefix = "gauss_seidel_res";
     #endif
 
     // Init the u cube
@@ -84,13 +87,23 @@ main(int argc, char *argv[]) {
     init_force(f, N);
 
     printf("\nrunning solver\n");
+    double time_start,time_end;
+    time_start = omp_get_wtime();
     #ifdef _JACOBI
     init_cube(output_u, N, start_T);
     jacobi(u, output_u, f, N, iter_max, tolerance);
     #else
     gauss_seidel(u,f, N,iter_max, tolerance);
     #endif
+    time_end = omp_get_wtime();
+    double time_total = (time_end - time_start);
+
     printf("\nsolver done\n");
+    printf("-- solver Parameters---\n");
+    printf("N: %d\n",N);
+    printf("iter max: %d\n", iter_max);
+    printf("tolerance: %f\n", tolerance);
+    printf("wall time: %f\n",time_total);
 
     // dump  results if wanted 
     switch(output_type) {
