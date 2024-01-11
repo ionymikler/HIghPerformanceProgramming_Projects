@@ -33,9 +33,6 @@ main(int argc, char *argv[]) {
     bool    verbose = false;
     int     thread_num = 1;
 
-    char	*output_prefix = "poisson_res";
-    char    *output_ext    = "";
-    char	output_filename[FILENAME_MAX];
     double 	***u = NULL;
     double 	***output_u = NULL;
     double  ***f =  NULL;
@@ -80,9 +77,6 @@ main(int argc, char *argv[]) {
         exit(-1);
     }
     init_cube(output_u, N, start_T);
-    output_prefix = "jacobi_res";
-    #else
-    output_prefix = "gauss_seidel_res";
     #endif
 
     // Init the u cube
@@ -93,13 +87,22 @@ main(int argc, char *argv[]) {
     if (verbose){printf("\nrunning solver\n");}
     double time_start,time_end;
     time_start = omp_get_wtime();
+    // All the magic happens here
     solve(N, iter_max, tolerance, u, output_u, f, verbose);
+    // All the magic ends here
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
 
 
+    // RESULTS AREA
     // TODO: make into function
     // calculate MFLOPS and MLUP/s
+    #ifdef _JACOBI
+        char *algo_name = "Jacobi";
+    #else
+        char  *algo_name = "Gauss-Seidel";
+    #endif
+
     if (verbose){
         printf("\nsolver done\n");
         print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
@@ -112,16 +115,15 @@ main(int argc, char *argv[]) {
 
     }else{
         // to logfile
-        #ifdef _JACOBI
-            char *algo = "Jacobi";
-        #else
-            char *algo = "Gauss-Seidel";
-        #endif
-        printf("%s,%d,%d,%d,%f,%f\n",
-        algo, N, thread_num, iter_max, tolerance, time_total);
+        printf("%s,%d,%d,%d,%f,%f, %f\n",
+        algo_name, N, thread_num, iter_max, tolerance, time_total, get_sum_u(u,N));
     }
 
-    // dump  results if wanted 
+    // dump results if wanted 
+    char	output_filename[FILENAME_MAX];
+    char	output_prefix[50];
+    char    *output_ext    = "";
+    sprintf(output_prefix,"%s_%s",algo_name, "res");
     switch(output_type) {
 	case 0:
 	    // no output at all
@@ -142,6 +144,7 @@ main(int argc, char *argv[]) {
 	    fprintf(stderr, "Non-supported output type!\n");
 	    break;
     }
+
 
     // de-allocate memory
     free_3d(u);

@@ -72,11 +72,23 @@ void sum_u(double ***u, int N){
     printf("sum of u: %f\n",sum);
 }
 
+double get_sum_u(double ***u, int N){
+    double sum = 0;
+    for (int i = 0; i < N; i++){
+        for (int j = 0; j < N; j++){
+             for (int k=0; k<N; k++){
+                sum += u[i][j][k];
+            }
+        }
+    }
+    return sum;
+}
+
 void print_params(int N, int iter_max, double tolerance, double start_T,int thread_num, bool verbose, int output_type){
     printf("-- solver Parameters---\n");
     printf("N: %d\n",N);
     printf("iter max: %d\n", iter_max);
-    printf("tolerance: %f\n", tolerance);
+    printf("tolerance: %.1e\n", tolerance);
     printf("start_T: %f\n", start_T);
     printf("thread_num: %d\n", thread_num);
     printf("verbose: %s\n", verbose?"yes":"no");
