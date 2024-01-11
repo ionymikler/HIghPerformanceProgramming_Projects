@@ -3,8 +3,8 @@
 TARGET_J  = poisson_j		# Jacobi
 TARGET_GS = poisson_gs		# Gauss-Seidel
 
-SOURCES	= main.c print.c alloc3d.c
-OBJECTS	= print.o alloc3d.o
+SOURCES	= main.c print.c alloc3d.c cube_utils.c
+OBJECTS	= print.o alloc3d.o cube_utils.o
 MAIN_J	= main_j.o
 MAIN_GS = main_gs.o
 OBJS_J	= $(MAIN_J) jacobi.o
@@ -14,8 +14,9 @@ OBJS_GS	= $(MAIN_GS) gauss_seidel.o
 #
 CC	= gcc
 DEFS	= 
-OPT	= -g -fopenmp
-IPO	=  
+OPT	= -g
+OPT += -O3 -fopenmp
+IPO	= 
 ISA	= 
 CHIP	= 
 ARCH	= 
@@ -23,7 +24,7 @@ PARA	=
 CFLAGS	= $(DEFS) $(ARCH) $(OPT) $(ISA) $(CHIP) $(IPO) $(PARA) $(XOPTS)
 LDFLAGS = -lm 
 
-all: $(TARGET_J) #$(TARGET_GS) 
+all: $(TARGET_J) $(TARGET_GS) 
 
 $(TARGET_J): $(OBJECTS) $(OBJS_J)
 	$(CC) -o $@ $(CFLAGS) $(OBJS_J) $(OBJECTS) $(LDFLAGS)
@@ -45,6 +46,6 @@ realclean: clean
 
 # DO NOT DELETE
 
-main_j.o: main.c print.h jacobi.h 
-main_gs.o: main.c print.h gauss_seidel.h
+main_j.o: main.c print.h jacobi.h cube_utils.h
+main_gs.o: main.c print.h gauss_seidel.h cube_utils.h
 print.o: print.h
