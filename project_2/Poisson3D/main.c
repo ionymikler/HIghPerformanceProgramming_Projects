@@ -50,8 +50,8 @@ main(int argc, char *argv[]) {
     omp_set_num_threads(t_num);
 
     // print parameters:
-    printf("-- Poisson solver ---\n");
-    printf("-- solver Parameters---\n");
+    printf("--- Poisson solver ---\n");
+    printf("--- solver Parameters---\n");
     printf("N: %d\n",N);
     printf("iter max: %d\n", iter_max);
     printf("tolerance: %f\n", tolerance);
@@ -75,6 +75,7 @@ main(int argc, char *argv[]) {
         perror("array u: allocation failed");
         exit(-1);
     }
+    init_cube(output_u, N, start_T);
     #endif
 
     // Init the u cube
@@ -84,13 +85,16 @@ main(int argc, char *argv[]) {
     init_force(f, N);
 
     printf("\nrunning solver\n");
+    double time_s=omp_get_wtime(),time_e,time_total;
     #ifdef _JACOBI
-    init_cube(output_u, N, start_T);
     jacobi(u, output_u, f, N, iter_max, tolerance);
     #else
     gauss_seidel(u,f, N,iter_max, tolerance);
     #endif
     printf("\nsolver done\n");
+    time_e = omp_get_wtime();
+    time_total = (time_e - time_s);
+    printf("wall time: %f\n",time_total);
 
     // dump  results if wanted 
     switch(output_type) {

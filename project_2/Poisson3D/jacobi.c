@@ -12,8 +12,6 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     double delta = 2.0 / (double)N;
     double dif = 10000.0;
     double h = 1/6.0;
-    double time_start,time_end;
-    time_start = omp_get_wtime();
 
     int steps = 0;
     while ( steps < iter_max && dif > tolerance){
@@ -37,7 +35,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         }
         dif = dif / ((N - 2) * (N - 2) * (N - 2));
         dif = sqrt(dif);
-        printf("dif: %lf\n", dif);
+        // printf("dif: %lf\n", dif);
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 for (int k = 0; k < N; k++) {
@@ -51,11 +49,8 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         steps++;
     }
     char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
-    time_end = omp_get_wtime();
-    double time_total = (time_end - time_start);
     
     printf("--- Iterations stopped ---\n");
     printf("reason: %s\n",reason);
     printf("Iteration: %d, dif: %f\n", steps, dif);
-    printf("wall time: %f\n",time_total);
 }
