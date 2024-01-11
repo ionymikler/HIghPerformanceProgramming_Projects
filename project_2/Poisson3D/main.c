@@ -38,7 +38,7 @@ main(int argc, char *argv[]) {
 
 
     /* get the paramters from the command line */
-    // N         = atoi(argv[1]);	// grid size
+    N         = atoi(argv[1]);	// grid size
     // iter_max  = atoi(argv[2]);  // max. no. of iterations
     // tolerance = atof(argv[3]);  // tolerance
     // start_T   = atof(argv[4]);  // start T for all inner grid points
@@ -46,11 +46,18 @@ main(int argc, char *argv[]) {
 	// output_type = atoi(argv[5]);  // ouput type
     // }
 
+    int t_num=2;
+    omp_set_num_threads(t_num);
+
     // print parameters:
     printf("-- Poisson solver ---\n");
+    printf("-- solver Parameters---\n");
     printf("N: %d\n",N);
     printf("iter max: %d\n", iter_max);
     printf("tolerance: %f\n", tolerance);
+    
+    printf("-- solver Parameters---\n");
+    printf("thread number: %d\n",t_num);
 
     // allocate memory
     if ( (u = malloc_3d(N, N, N)) == NULL ) {
