@@ -15,8 +15,6 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
     */
 
     printf("runnig gs\n");
-    double time_start,time_end;
-    time_start = omp_get_wtime();
 
     double delta = 2.0 / (double)N;
     double h = (double)1 / 6;
@@ -62,12 +60,8 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
     // Printing of results
 
     char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
-    time_end = omp_get_wtime();
-    double time_total = (time_end - time_start);
-    
     printf("\n--- Iterations stopped ---\n");
     printf("reason: %s\n",reason);
-    printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
-    printf("wall time: %f\n",time_total);
+    // printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
 }
 

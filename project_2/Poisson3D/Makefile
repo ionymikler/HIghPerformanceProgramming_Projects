@@ -53,18 +53,18 @@ clean_r:
 	@/bin/rm -f results/*  *.vtk *.dat
 
 # Default run values
-N = 64
-ITER_MAX = 5000
+N = 100
+ITER_MAX = 1000
 TOL = 1e-5
-START_T = 10.0
+START_T = 0.0
 THREAD_NUM=1
 VERBOSE = 1 # 0 = no, 1 = yes
 OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
-run_default_j:
+run_d_j:
 	./$(TARGET_J) $(N) $(ITER_MAX) $(TOL) $(START_T) $(THREAD_NUM) $(VERBOSE) $(OUTPUT_TYPE)
 
-run_default_gs:
+run_d_gs:
 	./$(TARGET_GS) $(N) $(ITER_MAX) $(TOL) $(START_T) $(THREAD_NUM) $(VERBOSE) $(OUTPUT_TYPE)
 
 submit:
