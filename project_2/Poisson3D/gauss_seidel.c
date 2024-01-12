@@ -11,12 +11,12 @@
 void compute_u(double ***u, double ***f, int N, double *diff_avg)
 {
 
-    double u_old;
+    double u_old,diff;
     double h = (double)1 / 6;
     double delta = 2.0 / (double)N;
     double sqr_diff_acum=0;
 
-    #pragma omp parallel for ordered(2) private(u_old) shared(u, f, N, diff_avg, h, delta) reduction(+:sqr_diff_acum) schedule(static,1)
+    #pragma omp parallel for ordered(2) private(u_old, diff) shared(u, f, N, diff_avg, h, delta) reduction(+:sqr_diff_acum) schedule(static,1)
     for (int i = 1; i < (N-1);i++){
         for (int j = 1; j < (N-1); j++){
             #pragma omp ordered \
@@ -34,7 +34,8 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
                     u[i][j][k-1] + \
                     f[i][j][k]
                 );
-                sqr_diff_acum += (u_old - u[i][j][k]) * (u_old - u[i][j][k]);
+                diff = u_old - u[i][j][k];
+                sqr_diff_acum += diff*diff;
             }
         #pragma omp ordered depend(source)
         }

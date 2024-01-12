@@ -95,8 +95,8 @@ main(int argc, char *argv[]) {
 
     // RESULTS AREA
     int tot_updated_points = (N-2)*(N-2)*(N-2);
-    int flops_total, lattice_ups_total; // will be calculated depending on iterations
-    double MFlops, MLUPs; // per second, will be calculated depending on iterations
+    double MFlops_total, MLups_total; // will be calculated depending on iterations
+    double MFlops_per_s, MLUPs_per_s; // per second, will be calculated depending on iterations
 
     int flops_per_lattice_per_iter;
     #ifdef _JACOBI
@@ -104,15 +104,18 @@ main(int argc, char *argv[]) {
         flops_per_lattice_per_iter = 7; 
     #else
         char  *algo_name = "Gauss-Seidel";
-        flops_per_lattice_per_iter = 10;
+        flops_per_lattice_per_iter = 9;
     #endif
 
     // calculate MFLOPS and MLUP/s
-    lattice_ups_total = *p_iter * tot_updated_points;
-    flops_total = lattice_ups_total * flops_per_lattice_per_iter;
+    double scl = 1/(time_total * 1e6);
 
-    MFlops = flops_total / (time_total * 1e6);
-    MLUPs = lattice_ups_total / (time_total * 1e6);
+    MLups_total = *p_iter * tot_updated_points * scl;
+
+    MFlops_total = MLups_total * flops_per_lattice_per_iter;
+
+    MFlops_per_s = MFlops_total;
+    MLUPs_per_s = MLups_total;
 
     if (verbose){
         printf("\nsolver done\n");
@@ -120,8 +123,8 @@ main(int argc, char *argv[]) {
 
         printf("\n--- Results ---\n");
         printf("Iterations: %d\n",iter);
-        printf("MFlops/s: %f\n",MFlops);
-        printf("MLUPs/s: %f\n",MLUPs);
+        printf("MFlops/s: %f\n",MFlops_per_s);
+        printf("MLUPs/s: %f\n",MLUPs_per_s);
         printf("wall time: %f\n",time_total);
 
         printf("Sanity check");
@@ -129,8 +132,8 @@ main(int argc, char *argv[]) {
 
     }else{
         // to logfile
-        printf("%s, %d, %d, %f, %d, %f, %f\n",
-        algo_name, N, thread_num, time_total, iter, MFlops, MLUPs);
+        printf("%d, %f, %d, %f, %f, %d\n",
+            N, time_total, iter, MLUPs_per_s, MFlops_per_s, thread_num);
     }
 
     // dump results if wanted 

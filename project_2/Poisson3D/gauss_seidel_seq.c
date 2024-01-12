@@ -15,7 +15,7 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double
 
     double delta = 2.0 / (double)N;
     double h = (double)1 / 6;
-    double u_old;
+    double u_old, diff;
     double sqr_diff_acum=0,diff_avg=999;
     double Nm2p3;
     int iter =0;
@@ -38,7 +38,8 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double
                         u[i][j][k-1] + \
                         delta * delta * f[i][j][k]
                     );
-                    sqr_diff_acum += (u_old - u[i][j][k]) * (u_old - u[i][j][k]);
+                    diff = u_old - u[i][j][k];
+                    sqr_diff_acum += diff*diff;
                 }
             }
         }

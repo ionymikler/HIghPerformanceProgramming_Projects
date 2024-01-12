@@ -11,7 +11,7 @@
 void compute_u(double ***u, double ***f, int N, double *diff_avg)
 {
 
-    double u_old;
+    double u_old, diff;
     double h = (double)1 / 6;
     double delta = 2.0 / (double)N;
     double sqr_diff_acum=0;
@@ -34,7 +34,8 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
                     u[i][j][k-1] + \
                     f[i][j][k]
                 );
-                sqr_diff_acum += (u_old - u[i][j][k]) * (u_old - u[i][j][k]);
+                diff = u_old - u[i][j][k];
+                sqr_diff_acum += diff*diff;
             }
         #pragma omp ordered depend(source)
         }

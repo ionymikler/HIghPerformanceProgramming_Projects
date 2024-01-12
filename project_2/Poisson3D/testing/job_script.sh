@@ -4,7 +4,7 @@
 #BSUB -q hpc
 
 ### -- set the job Name --
-#BSUB -J poisson3d
+#BSUB -J poisson3d_pt4
 
 ### -- ask for number of cores (default: 1) -- 
 #BSUB -n 1
@@ -40,8 +40,11 @@ VERBOSE=0 # 0 = no, 1 = yes
 OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
-Ns="100 200 400 500" # Start small, check times
+# make a list of Ns in steps of 5 from 10 to 100
+Ns=$(seq 10 5 100)
+# Ns="" # Start small, check times
 # Ns="100" # Start small, check times
+# THREAD_NUMS="1"
 THREAD_NUMS="1 2 4 8"
 EXEs="poisson_j poisson_gs"
 Exe_GS="poisson_gs"
@@ -50,7 +53,7 @@ Exe_J="poisson_j"
 EXEs="poisson_gs poisson_j"
 
 TIME=$(date +"%H:%M:%S")
-RESULTS_FILE="results/results_${TIME}.txt"
+RESULTS_FILE="results/results_${Exe_GS}_${TIME}.txt"
 
 # environment info
 echo "Current working directory: $(pwd)"
