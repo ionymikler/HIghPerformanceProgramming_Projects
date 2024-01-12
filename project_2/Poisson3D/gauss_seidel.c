@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <omp.h>
+#include <stdbool.h>
 #include "cube_utils.h"
 
 
@@ -15,7 +16,7 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
     double delta = 2.0 / (double)N;
     int t_id = omp_get_thread_num();
 
-    #pragma omp for ordered(1) \
+    #pragma omp for ordered(2) \
         private(u_old) \
         // firstprivate(sqr_diff_acum)
     for (int i = 1; i < (N-1);i++){
@@ -33,7 +34,7 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
                     u[i][j-1][k] + \
                     u[i][j][k+1] + \
                     u[i][j][k-1] + \
-                    delta * delta * f[i][j][k]
+                    f[i][j][k]
                 );
                 sqr_diff_acum += (u_old - u[i][j][k]) * (u_old - u[i][j][k]);
             }
@@ -50,13 +51,11 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
 }
 
 void
-gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
+gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double tolerance, bool verbose) {
     // simple parallel version
 
     printf("%s\n","running simple parallelized gs");
-    double time_start,time_end;
     int iter=0;
-    time_start = omp_get_wtime();
 
     printf("Single region\n");
     double diff_avg=999;
@@ -70,20 +69,18 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
             // printf("Number of threads: %d\n",omp_get_num_threads());
             compute_u(u,f, N, &diff_avg);
         }
-        if (iter % 100 == 0){
+        if (iter % 100 == 0 && verbose){
             printf("iter: %d, diff_avg: %f\n",iter, diff_avg);
         }
         iter++;
     }
-    char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
     
     // Printing of results
-    printf("\n--- Iterations stopped ---\n");
-    printf("reason: %s\n",reason);
-    printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
-
-    time_end = omp_get_wtime();
-    double time_total = (time_end - time_start);
-    printf("wall time: %f\n",time_total); // deal with this for parallel
+    if (verbose){
+        char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
+        printf("\n--- Iterations stopped ---\n");
+        printf("reason: %s\n",reason);
+        printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
+    }
 }
 
