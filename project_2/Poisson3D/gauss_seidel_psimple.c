@@ -51,11 +51,9 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double
 
     double diff_avg=999;
     
-    // bool once = false;
     while (iter<iter_max && diff_avg>tolerance)
     {
             compute_u(u,f, N, &diff_avg);
-        // } // END PARALLEL
 
         iter++;
     }
