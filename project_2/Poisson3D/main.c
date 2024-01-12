@@ -33,13 +33,6 @@ main(int argc, char *argv[]) {
     bool    verbose = false;
     int     thread_num = 1;
 
-    // result variables
-    // int iter;
-    int flops_per_iter;
-    int lattice_ups_per_iter = (N-2)*(N-2)*(N-2);
-    int flops_total, lattice_ups_total; // will be calculated depending on iterations
-    double MFlops, MLUPs; // per second, will be calculated depending on iterations
-
     double 	***u = NULL;
     double 	***output_u = NULL;
     double  ***f =  NULL;
@@ -56,7 +49,7 @@ main(int argc, char *argv[]) {
 	output_type = atoi(argv[7]);  // ouput type
     }
     
-    printf("Num threads: %d\n",omp_get_max_threads());
+    // printf("Num threads: %d\n",omp_get_max_threads());
 
     // print parameters:
     if (verbose){
@@ -101,17 +94,24 @@ main(int argc, char *argv[]) {
 
 
     // RESULTS AREA
+    int tot_updated_points = (N-2)*(N-2)*(N-2);
+    int flops_total, lattice_ups_total; // will be calculated depending on iterations
+    double MFlops, MLUPs; // per second, will be calculated depending on iterations
+
+    int flops_per_lattice_per_iter;
     #ifdef _JACOBI
         char *algo_name = "Jacobi";
-        flops_per_iter = 7; 
+        flops_per_lattice_per_iter = 7; 
     #else
         char  *algo_name = "Gauss-Seidel";
-        flops_per_iter = 6;
+        flops_per_lattice_per_iter = 10;
     #endif
+
     // calculate MFLOPS and MLUP/s
-    flops_total = *p_iter * flops_per_iter;
-    lattice_ups_total = *p_iter * lattice_ups_per_iter;
-    MFlops = flops_total / (time_total * 1e6); //TODO: Check this, the values are wrong.
+    lattice_ups_total = *p_iter * tot_updated_points;
+    flops_total = lattice_ups_total * flops_per_lattice_per_iter;
+
+    MFlops = flops_total / (time_total * 1e6);
     MLUPs = lattice_ups_total / (time_total * 1e6);
 
     if (verbose){
@@ -119,8 +119,9 @@ main(int argc, char *argv[]) {
         print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
 
         printf("\n--- Results ---\n");
-        // printf("MFlops/s: %f\n",MFlops);
-        // printf("MLUPs/s: %f\n",MLUPs);
+        printf("Iterations: %d\n",iter);
+        printf("MFlops/s: %f\n",MFlops);
+        printf("MLUPs/s: %f\n",MLUPs);
         printf("wall time: %f\n",time_total);
 
         printf("Sanity check");
@@ -128,9 +129,8 @@ main(int argc, char *argv[]) {
 
     }else{
         // to logfile
-        printf("%s, %d, %f\n",algo_name,N, time_total);
-        // printf("%s,%d,%d,%d,%f,%f,%f,%f\n",
-        // algo_name, N, thread_num, iter, MFlops, MLUPs, time_total, get_sum_u(u,N));
+        printf("%s, %d, %d, %f, %d, %f, %f\n",
+        algo_name, N, thread_num, time_total, iter, MFlops, MLUPs);
     }
 
     // dump results if wanted 
