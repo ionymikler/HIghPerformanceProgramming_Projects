@@ -10,15 +10,11 @@
 
 void compute_u(double ***u, double ***f, int N, double *diff_avg)
 {
-    // printf("%s\n","running compute_u");
+
     double u_old;
     double h = (double)1 / 6;
     double delta = 2.0 / (double)N;
     double sqr_diff_acum=0;
-
-    // #pragma omp parallel default(none) shared(u, f, N, diff_avg, h, delta) private(u_old, sqr_diff_acum)
-    //{
-    //int t_id = omp_get_thread_num();
 
     #pragma omp parallel for ordered(2) private(u_old) shared(u, f, N, diff_avg, h, delta) reduction(+:sqr_diff_acum) schedule(static,1)
     for (int i = 1; i < (N-1);i++){
@@ -44,18 +40,13 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
         }
     } // END PARALLELIZED FOR
 
-    // average difference
-    //#pragma omp single
-    
-    double Nm2p3 = (N-2)*(N-2)*(N-2); // N-2 to the power of three
-    *diff_avg = sqrt(sqr_diff_acum/Nm2p3);
+    *diff_avg = sqrt(sqr_diff_acum);
 }
 
 void
 gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double tolerance, bool verbose) {
     // simple parallel version
 
-    // printf("%s\n","running simple parallelized gs");
     int iter=0;
 
     double diff_avg=999;
@@ -63,16 +54,9 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double
     // bool once = false;
     while (iter<iter_max && diff_avg>tolerance)
     {
-        // #pragma omp parallel default(none) \
-        //     shared(u, f, N, diff_avg)
-        // {
-            // printf("Number of threads: %d\n",omp_get_num_threads());
             compute_u(u,f, N, &diff_avg);
         // } // END PARALLEL
 
-        if (iter % 100 == 0 && verbose){
-            printf("iter: %d, diff_avg: %f\n",iter, diff_avg);
-        }
         iter++;
     }
     

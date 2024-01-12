@@ -8,7 +8,7 @@
 
 
 void
-gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
+gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double tolerance, bool verbose) {
     // sequential version of gauss_seidel
 
     printf("runnig gs\n");
@@ -22,7 +22,6 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
 
     // Loop through Step
     while (iter<iter_max && diff_avg>tolerance)
-    // while (iter<iter_max)
     {
         sqr_diff_acum = 0; // reset diff for every iteration
         for (int i = 1; i < (N-1);i++){
@@ -43,22 +42,17 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
                 }
             }
         }
-
-        // average difference
-        Nm2p3 = (N-2)*(N-2)*(N-2); // N-2 to the power of three
-        diff_avg = sqrt(sqr_diff_acum/Nm2p3);
-
-        if (iter % 100 == 0){
-            printf("iter: %d, diff_avg: %f\n",iter, diff_avg);
-        }
+        diff_avg = sqrt(sqr_diff_acum);
         iter++;
     }
 
     // Printing of results
-
-    char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
-    printf("\n--- Iterations stopped ---\n");
-    printf("reason: %s\n",reason);
-    // printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
+    if (verbose){
+        char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
+        printf("\n--- Iterations stopped ---\n");
+        printf("reason: %s\n",reason);
+        printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
+    }
+    *p_inter = iter;
 }
 
