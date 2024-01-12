@@ -61,11 +61,17 @@ THREAD_NUM=4
 VERBOSE = 1 # 0 = no, 1 = yes
 OUTPUT_TYPE=4 # 0:=None 3:='.dat' 4:='.vtk
 
+get_gsp:
+	@/bin/rm -f gauss_seidel.c
+	@/bin/cp gauss_seidel_psimple.c gauss_seidel.c
+
 run_d_j:
 	./$(TARGET_J) $(N) $(ITER_MAX) $(TOL) $(START_T) $(THREAD_NUM) $(VERBOSE) $(OUTPUT_TYPE)
 
 run_d_gs:
 	./$(TARGET_GS) $(N) $(ITER_MAX) $(TOL) $(START_T) $(THREAD_NUM) $(VERBOSE) $(OUTPUT_TYPE)
+
+run: run_d_gs
 
 submit:
 	@/bin/rm -f *.out

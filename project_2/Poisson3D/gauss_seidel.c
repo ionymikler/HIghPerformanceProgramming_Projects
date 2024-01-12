@@ -15,7 +15,7 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
     double delta = 2.0 / (double)N;
     int t_id = omp_get_thread_num();
 
-    #pragma omp for ordered(2) \
+    #pragma omp for ordered(1) \
         private(u_old) \
         // firstprivate(sqr_diff_acum)
     for (int i = 1; i < (N-1);i++){
@@ -43,10 +43,10 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
 
     // average difference
     double Nm2p3 = (N-2)*(N-2)*(N-2); // N-2 to the power of three
-    #pragma omp critical
-    {
+    // #pragma omp critical
+    // {
         *diff_avg = sqrt(sqr_diff_acum/Nm2p3);
-    }
+    // }
 }
 
 void
@@ -61,16 +61,13 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
     printf("Single region\n");
     double diff_avg=999;
     
-    bool once = false;
+    // bool once = false;
     while (iter<iter_max && diff_avg>tolerance)
     {
         #pragma omp parallel default(none) \
-            shared(u, f, N, diff_avg, once) \
+            shared(u, f, N, diff_avg)
         {
-            if (!once){
-                printf("Number of threads: %d\n",omp_get_num_threads());
-                once = true;
-            }
+            // printf("Number of threads: %d\n",omp_get_num_threads());
             compute_u(u,f, N, &diff_avg);
         }
         if (iter % 100 == 0){

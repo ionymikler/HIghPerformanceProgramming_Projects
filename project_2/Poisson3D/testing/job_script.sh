@@ -43,7 +43,7 @@ OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 # Parameters
 Ns="100" # Start small, check times
 # THREAD_NUMS="1 2 4"
-THREAD_NUMS="1 2 4 8"
+THREAD_NUMS="1 2 4"
 # EXEs="poisson_j poisson_gs"
 EXEs="poisson_gs"
 

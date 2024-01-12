@@ -55,8 +55,10 @@ void init_force(double ***f, int N){
     int rad_y_s=0, rad_y_e=floor(N/4);
     int rad_z_s=ceil(N/6), rad_z_e=floor(N/2);
 
+    double delta = 2.0 / (double)N;
+
     int radiator_range[6] = {rad_x_s, rad_x_e, rad_y_s, rad_y_e, rad_z_s, rad_z_e};
-    populate_range(f,radiator_range,200);
+    populate_range(f,radiator_range,delta*delta*200);
 }
 
 void sum_u(double ***u, int N){

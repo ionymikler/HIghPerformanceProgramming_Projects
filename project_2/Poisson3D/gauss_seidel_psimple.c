@@ -33,7 +33,7 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
                     u[i][j-1][k] + \
                     u[i][j][k+1] + \
                     u[i][j][k-1] + \
-                    delta * delta * f[i][j][k]
+                    f[i][j][k]
                 );
                 sqr_diff_acum += (u_old - u[i][j][k]) * (u_old - u[i][j][k]);
             }
@@ -43,10 +43,10 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
 
     // average difference
     double Nm2p3 = (N-2)*(N-2)*(N-2); // N-2 to the power of three
-    #pragma omp critical
-    {
+    // #pragma omp critical
+    // {
         *diff_avg = sqrt(sqr_diff_acum/Nm2p3);
-    }
+    // }
 }
 
 void
@@ -67,7 +67,7 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
         #pragma omp parallel default(none) \
             shared(u, f, N, diff_avg)
         {
-            printf("Number of threads: %d\n",omp_get_num_threads());
+            // printf("Number of threads: %d\n",omp_get_num_threads());
             compute_u(u,f, N, &diff_avg);
         }
         if (iter % 100 == 0){

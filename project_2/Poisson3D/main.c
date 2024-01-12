@@ -56,15 +56,12 @@ main(int argc, char *argv[]) {
 	output_type = atoi(argv[7]);  // ouput type
     }
 
-    int t_num=4;
-    omp_set_num_threads(t_num);
+    omp_set_num_threads(thread_num);
 
     // print parameters:
     if (verbose){
         printf("-- Poisson solver ---\n");
-        print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
-        
-        printf("Number of threads: %d\n",t_num);
+        print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);        
     }
 
     // allocate memory
@@ -122,8 +119,8 @@ main(int argc, char *argv[]) {
         print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
 
         printf("\n--- Results ---\n");
-        printf("MFlops/s: %f\n",MFlops);
-        printf("MLUPs/s: %f\n",MLUPs);
+        // printf("MFlops/s: %f\n",MFlops);
+        // printf("MLUPs/s: %f\n",MLUPs);
         printf("wall time: %f\n",time_total);
 
         printf("Sanity check");
