@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <omp.h>
 #include "cube_utils.h"
 
 void populate_range(double ***p, int startsEnds[6], double val){
@@ -92,7 +93,7 @@ void print_params(int N, int iter_max, double tolerance, double start_T,int thre
     printf("iter max: %d\n", iter_max);
     printf("tolerance: %.1e\n", tolerance);
     printf("start_T: %f\n", start_T);
-    printf("thread_num: %d\n", thread_num);
+    printf("thread_num: %d\n", omp_get_num_threads());
     printf("verbose: %s\n", verbose?"yes":"no");
     printf("output_type: %d\n", output_type);
 }

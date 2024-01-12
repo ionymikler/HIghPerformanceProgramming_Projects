@@ -55,8 +55,8 @@ main(int argc, char *argv[]) {
     if (argc == 8) {
 	output_type = atoi(argv[7]);  // ouput type
     }
-
-    omp_set_num_threads(thread_num);
+    
+    printf("Num threads: %d\n",omp_get_max_threads());
 
     // print parameters:
     if (verbose){
