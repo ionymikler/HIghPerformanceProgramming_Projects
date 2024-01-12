@@ -33,6 +33,13 @@ main(int argc, char *argv[]) {
     bool    verbose = false;
     int     thread_num = 1;
 
+    // result variables
+    // int iter;
+    int flops_per_iter;
+    int lattice_ups_per_iter = (N-2)*(N-2)*(N-2);
+    int flops_total, lattice_ups_total; // will be calculated depending on iterations
+    double MFlops, MLUPs; // per second, will be calculated depending on iterations
+
     double 	***u = NULL;
     double 	***output_u = NULL;
     double  ***f =  NULL;
@@ -88,26 +95,35 @@ main(int argc, char *argv[]) {
     double time_start,time_end;
     time_start = omp_get_wtime();
     // All the magic happens here
-    solve(N, iter_max, tolerance, u, output_u, f, verbose);
+    int iter = 0;
+    int *p_iter = &iter;
+    solve(u, output_u, f, N, iter_max, p_iter, tolerance, verbose);
     // All the magic ends here
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
 
 
     // RESULTS AREA
-    // TODO: make into function
-    // calculate MFLOPS and MLUP/s
     #ifdef _JACOBI
         char *algo_name = "Jacobi";
+        flops_per_iter = 7; 
     #else
         char  *algo_name = "Gauss-Seidel";
+        flops_per_iter = 6;
     #endif
+    // calculate MFLOPS and MLUP/s
+    flops_total = *p_iter * flops_per_iter;
+    lattice_ups_total = *p_iter * lattice_ups_per_iter;
+    MFlops = flops_total / (time_total * 1e6); //TODO: Check this, the values are wrong.
+    MLUPs = lattice_ups_total / (time_total * 1e6);
 
     if (verbose){
         printf("\nsolver done\n");
         print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
 
         printf("--- Results ---\n");
+        printf("MFlops/s: %f\n",MFlops);
+        printf("MLUPs/s: %f\n",MLUPs);
         printf("wall time: %f\n",time_total);
 
         printf("Sanity check");
@@ -115,8 +131,8 @@ main(int argc, char *argv[]) {
 
     }else{
         // to logfile
-        printf("%s,%d,%d,%d,%f,%f, %f\n",
-        algo_name, N, thread_num, iter_max, tolerance, time_total, get_sum_u(u,N));
+        printf("%s,%d,%d,%d,%f,%f,%f,%f\n",
+        algo_name, N, thread_num, iter, MFlops, MLUPs, time_total, get_sum_u(u,N));
     }
 
     // dump results if wanted 

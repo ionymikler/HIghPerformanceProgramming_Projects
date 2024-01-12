@@ -8,7 +8,7 @@
 
 
 void
-gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance, bool verbose) {
+gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double tolerance, bool verbose) {
     /*
         NOTE: length of cube is from -1 to 1, so 2
         delta is length/N -> 2/N
@@ -59,13 +59,12 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance, bo
     }
 
     // Printing of results
-
-    
     if (verbose){
         char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
         printf("\n--- Iterations stopped ---\n");
         printf("reason: %s\n",reason);
         printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
     }
+    *p_inter = iter;
 }
 

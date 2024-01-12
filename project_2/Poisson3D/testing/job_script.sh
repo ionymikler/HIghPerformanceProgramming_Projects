@@ -38,7 +38,7 @@ TOL=1e-5
 INIT_TEMP=10
 THREAD_NUM=1
 VERBOSE=0 # 0 = no, 1 = yes
-OUTPUT_TYPE=4 # 0:=None 3:='.dat' 4:='.vtk
+OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
 Ns="10 20 30" # Start small, check times

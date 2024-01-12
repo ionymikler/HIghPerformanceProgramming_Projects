@@ -2,4 +2,4 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-void solve(int N, int iter_max, double tolerance, double ***u, double ***output_u, double ***f, bool verbose);
+void solve(double ***u, double ***output_u, double ***f, int N, int iter_max, int *iter, double tolerance, bool verbose);

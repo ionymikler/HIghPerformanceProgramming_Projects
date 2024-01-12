@@ -7,6 +7,6 @@
 #define _JACOBI_H
 #include <stdbool.h>
 
-void jacobi(double***, double***, double***, int, int, double, bool verbose);
+void jacobi(double***, double***, double***, int, int, int*, double, bool verbose);
 
 #endif

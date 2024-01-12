@@ -14,12 +14,13 @@
 #include "gauss_seidel.h"
 #endif
 
-void solve(int N, int iter_max, double tolerance, double ***u, double ***output_u, double ***f, bool verbose){
+void solve(double ***u, double ***output_u, double ***f, int N, int iter_max, int *p_iter, double tolerance, bool verbose){
+    // print("iter: %d\n", *iter);
     #ifdef _JACOBI
     if (verbose){printf("\nrunning Jacobi solver\n");}
-    jacobi(u, output_u, f, N, iter_max, tolerance, verbose);
+    jacobi(u, output_u, f, N, iter_max, p_iter, tolerance, verbose);
     #else
     if (verbose){printf("\nrunning Gauss-Seidel solver\n");}
-    gauss_seidel(u, f, N, iter_max, tolerance, verbose);
+    gauss_seidel(u, f, N, iter_max, p_iter, tolerance, verbose);
     #endif
 }
