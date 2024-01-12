@@ -128,8 +128,9 @@ main(int argc, char *argv[]) {
 
     }else{
         // to logfile
-        printf("%s,%d,%d,%d,%f,%f,%f,%f\n",
-        algo_name, N, thread_num, iter, MFlops, MLUPs, time_total, get_sum_u(u,N));
+        printf("%s, %d, %f\n",algo_name,N, time_total);
+        // printf("%s,%d,%d,%d,%f,%f,%f,%f\n",
+        // algo_name, N, thread_num, iter, MFlops, MLUPs, time_total, get_sum_u(u,N));
     }
 
     // dump results if wanted 

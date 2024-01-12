@@ -33,19 +33,21 @@
 #BSUB -e results/Output_%J.err
 
 # Fixed values
-ITER_MAX=5000
+ITER_MAX=1000
 TOL=1e-5
-INIT_TEMP=10
-THREAD_NUM=1
+START_T=0
 VERBOSE=0 # 0 = no, 1 = yes
 OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
-Ns="100" # Start small, check times
-# THREAD_NUMS="1 2 4"
-THREAD_NUMS="1 2 4"
-# EXEs="poisson_j poisson_gs"
-EXEs="poisson_gs"
+Ns="100 200 400 500" # Start small, check times
+# Ns="100" # Start small, check times
+THREAD_NUMS="1 2 4 8"
+EXEs="poisson_j poisson_gs"
+Exe_GS="poisson_gs"
+Exe_J="poisson_j"
+
+EXEs="poisson_gs poisson_j"
 
 TIME=$(date +"%H:%M:%S")
 RESULTS_FILE="results/results_${TIME}.txt"
@@ -53,29 +55,28 @@ RESULTS_FILE="results/results_${TIME}.txt"
 # environment info
 echo "Current working directory: $(pwd)"
 
-# check executables exist
-for EXE in $EXEs; do
-    if [ ! -f $EXE ]; then
-        echo "Executable $EXE not found"
-        exit 1
-    fi
-done
+# ./poisson_gs 100 $ITER_MAX $TOL $INIT_TEMP $THREAD_NUM $VERBOSE $OUTPUT_TYPE
+# # check executables exist
+# for EXE in $EXEs; do
+#     if [ ! -f $EXE ]; then
+#         echo "Executable $EXE not found"
+#         exit 1
+#     fi
+# done
 
 # run the executables
 # clean results file
 echo "" > $RESULTS_FILE
-for EXE in $EXEs; do
-    echo ""
-    echo "--- Iterating with $EXE ---"
+echo "--- Iterating with $Exe_GS ---"
+for N in $Ns; do
     for tn in $THREAD_NUMS; do
-        echo "  Setting thread_num=$tn"
-        for N in $Ns; do
-            if [ -n "$N" ]; then
-                echo "    Running $EXE with N=$N, thread_num=$THREAD_NUM"
-                ./$EXE $N $ITER_MAX $TOL $INIT_TEMP $THREAD_NUM $VERBOSE $OUTPUT_TYPE >> $RESULTS_FILE
-            fi
-        done
-    done
+        if [ -n "$N" ]; then
+            echo "  Setting thread_num=$tn"
+            echo "    Running $Exe_GS with N=$N, thread_num=$tn"
+            OMP_NUM_THREADS=$tn
+            ./$Exe_GS $N $ITER_MAX $TOL $START_T $tn $VERBOSE $OUTPUT_TYPE >> $RESULTS_FILE
+        fi
+done
 done
 
 echo "Done"
