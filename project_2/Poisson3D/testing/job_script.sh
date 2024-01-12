@@ -41,7 +41,8 @@ OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
 # make a list of Ns in steps of 5 from 10 to 100
-Ns=$(seq 100 100 400)
+Ns=$(seq 10 5 100)
+Ns+=" $(seq 200 100 400)"
 # Ns="" # Start small, check times
 # Ns="100" # Start small, check times
 THREAD_NUMS="8"
@@ -58,17 +59,7 @@ RESULTS_FILE="results/results_${Exe_GS}_${TIME}.txt"
 # environment info
 echo "Current working directory: $(pwd)"
 
-# ./poisson_gs 100 $ITER_MAX $TOL $INIT_TEMP $THREAD_NUM $VERBOSE $OUTPUT_TYPE
-# # check executables exist
-# for EXE in $EXEs; do
-#     if [ ! -f $EXE ]; then
-#         echo "Executable $EXE not found"
-#         exit 1
-#     fi
-# done
-
 # run the executables
-# clean results file
 echo "" > $RESULTS_FILE
 echo "--- Iterating with $Exe_GS ---"
 for N in $Ns; do
@@ -79,7 +70,7 @@ for N in $Ns; do
             OMP_NUM_THREADS=$tn
             ./$Exe_GS $N $ITER_MAX $TOL $START_T $tn $VERBOSE $OUTPUT_TYPE >> $RESULTS_FILE
         fi
-done
+    done
 done
 
 echo "Done"
