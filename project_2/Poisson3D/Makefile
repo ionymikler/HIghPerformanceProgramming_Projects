@@ -55,12 +55,12 @@ clean_r:
 
 # Default run values
 N = 300
-ITER_MAX = 1000
+ITER_MAX = 5000
 TOL = 1e-5
 START_T = 0.0
-THREAD_NUM=8
-VERBOSE = 0 # 0 = no, 1 = yes
-OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
+THREAD_NUM=1
+VERBOSE = 1 # 0 = no, 1 = yes
+OUTPUT_TYPE=4 # 0:=None 3:='.dat' 4:='.vtk
 
 run_j:
 	OMP_NUM_THREADS=$(THREAD_NUM) ./$(TARGET_J) $(N) $(ITER_MAX) $(TOL) $(START_T) $(THREAD_NUM) $(VERBOSE) $(OUTPUT_TYPE)

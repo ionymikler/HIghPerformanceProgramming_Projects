@@ -36,7 +36,7 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double
                         u[i][j-1][k] + \
                         u[i][j][k+1] + \
                         u[i][j][k-1] + \
-                        delta * delta * f[i][j][k]
+                        f[i][j][k]
                     );
                     diff = u_old - u[i][j][k];
                     sqr_diff_acum += diff*diff;
