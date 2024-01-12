@@ -121,7 +121,7 @@ main(int argc, char *argv[]) {
         printf("\nsolver done\n");
         print_params(N, iter_max, tolerance, start_T, thread_num, verbose, output_type);
 
-        printf("--- Results ---\n");
+        printf("\n--- Results ---\n");
         printf("MFlops/s: %f\n",MFlops);
         printf("MLUPs/s: %f\n",MLUPs);
         printf("wall time: %f\n",time_total);

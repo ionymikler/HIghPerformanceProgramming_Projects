@@ -41,11 +41,11 @@ VERBOSE=0 # 0 = no, 1 = yes
 OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
-Ns="10 20 30" # Start small, check times
+Ns="100" # Start small, check times
 # THREAD_NUMS="1 2 4"
-THREAD_NUMS="1"
-EXEs="poisson_j poisson_gs"
-# EXEs="poisson_gs"
+THREAD_NUMS="1 2 4 8"
+# EXEs="poisson_j poisson_gs"
+EXEs="poisson_gs"
 
 TIME=$(date +"%H:%M:%S")
 RESULTS_FILE="results/results_${TIME}.txt"

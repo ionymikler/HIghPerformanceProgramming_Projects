@@ -57,9 +57,9 @@ N = 100
 ITER_MAX = 1000
 TOL = 1e-5
 START_T = 0.0
-THREAD_NUM=1
+THREAD_NUM=4
 VERBOSE = 1 # 0 = no, 1 = yes
-OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
+OUTPUT_TYPE=4 # 0:=None 3:='.dat' 4:='.vtk
 
 run_d_j:
 	./$(TARGET_J) $(N) $(ITER_MAX) $(TOL) $(START_T) $(THREAD_NUM) $(VERBOSE) $(OUTPUT_TYPE)

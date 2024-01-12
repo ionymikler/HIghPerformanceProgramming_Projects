@@ -51,12 +51,9 @@ void compute_u(double ***u, double ***f, int N, double *diff_avg)
 
 void
 gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
-    /*
-        NOTE: length of cube is from -1 to 1, so 2
-        delta is length/N -> 2/N
-    */
+    // simple parallel version
 
-    printf("%s\n","running gs");
+    printf("%s\n","running simple parallelized gs");
     double time_start,time_end;
     int iter=0;
     time_start = omp_get_wtime();
@@ -64,11 +61,13 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
     printf("Single region\n");
     double diff_avg=999;
     
+    // bool once = false;
     while (iter<iter_max && diff_avg>tolerance)
     {
         #pragma omp parallel default(none) \
             shared(u, f, N, diff_avg)
         {
+            printf("Number of threads: %d\n",omp_get_num_threads());
             compute_u(u,f, N, &diff_avg);
         }
         if (iter % 100 == 0){

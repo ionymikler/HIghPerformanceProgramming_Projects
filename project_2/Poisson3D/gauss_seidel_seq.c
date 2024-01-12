@@ -9,10 +9,7 @@
 
 void
 gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
-    /*
-        NOTE: length of cube is from -1 to 1, so 2
-        delta is length/N -> 2/N
-    */
+    // sequential version of gauss_seidel
 
     printf("runnig gs\n");
 
