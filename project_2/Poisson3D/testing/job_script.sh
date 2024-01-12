@@ -4,7 +4,7 @@
 #BSUB -q hpc
 
 ### -- set the job Name --
-#BSUB -J poisson3d_pt4
+#BSUB -J poisson3d
 
 ### -- ask for number of cores (default: 1) -- 
 #BSUB -n 1
@@ -41,11 +41,11 @@ OUTPUT_TYPE=0 # 0:=None 3:='.dat' 4:='.vtk
 
 # Parameters
 # make a list of Ns in steps of 5 from 10 to 100
-Ns=$(seq 10 5 100)
+Ns=$(seq 100 100 400)
 # Ns="" # Start small, check times
 # Ns="100" # Start small, check times
-# THREAD_NUMS="1"
-THREAD_NUMS="1 2 4 8"
+THREAD_NUMS="8"
+# THREAD_NUMS="1 2 4 8"
 EXEs="poisson_j poisson_gs"
 Exe_GS="poisson_gs"
 Exe_J="poisson_j"

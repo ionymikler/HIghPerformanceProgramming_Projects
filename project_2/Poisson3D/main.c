@@ -104,13 +104,13 @@ main(int argc, char *argv[]) {
         flops_per_lattice_per_iter = 7; 
     #else
         char  *algo_name = "Gauss-Seidel";
-        flops_per_lattice_per_iter = 9;
+        flops_per_lattice_per_iter = 10;
     #endif
 
     // calculate MFLOPS and MLUP/s
-    double scl = 1/(time_total * 1e6);
+    double scl = tot_updated_points/(time_total * 1e6);
 
-    MLups_total = *p_iter * tot_updated_points * scl;
+    MLups_total = *p_iter *  scl;
 
     MFlops_total = MLups_total * flops_per_lattice_per_iter;
 
