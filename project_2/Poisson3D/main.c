@@ -33,10 +33,10 @@ main(int argc, char *argv[]) {
 
     // Default parameters
     int 	N = N_DEFAULT;
-    int 	iter_max = 5000;
+    int 	iter_max = 1000;
     double	tolerance = 1e-5;
-    double	start_T = 10; // mid of 0 and 20
-    int		output_type = 4;
+    double	start_T = 0; // mid of 0 and 20
+    int		output_type = 0;
 
     char	*output_prefix = "poisson_res";
     char    *output_ext    = "";
