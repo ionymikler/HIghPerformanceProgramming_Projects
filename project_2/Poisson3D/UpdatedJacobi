@@ -1,0 +1,34 @@
+            #pragma omp parallel reduction(+ : dif) shared(N,h, input,f,output,delta,steps) private(i,j,k)
+            {
+                #pragma omp for 
+                for (i = 1; i < (N-1);i++){
+                    for ( j = 1; j < (N-1); j++){
+                        for ( k = 1; k < (N-1); k++){
+                        // calculate new value
+                            output[i][j][k] = h * (input[i-1][j][k] + 
+                                            input[i+1][j][k] +
+                                            input[i][j-1][k] +
+                                            input[i][j+1][k] + 
+                                            input[i][j][k-1] +
+                                            input[i][j][k+1] +
+                                            f[i][j][k]);
+                                                            
+                            d = output[i][j][k] - input[i][j][k];
+                            dif += d*d;
+                            
+                        }
+                    }
+                } //implicit barrier here
+                dif = sqrt(dif);
+                
+
+                //Do we have to reinitialize here?
+                #pragma omp for
+                for (i = 0; i < N; i++) {
+                    for (j  = 0; j < N; j++) {
+                        for ( k = 0; k < N; k++) {
+                            input[i][j][k] = output[i][j][k];
+                        }
+                    }
+                }//implicit barrier here
+            } // end of parralized section
