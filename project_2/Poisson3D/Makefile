@@ -54,12 +54,12 @@ clean_r:
 	@/bin/rm -f results/*  *.vtk *.dat
 
 # Default run values
-N = 300
+N = 100
 ITER_MAX = 5000
 TOL = 1e-5
 START_T = 0.0
 THREAD_NUM=1
-VERBOSE = 1 # 0 = no, 1 = yes
+VERBOSE = 0 # 0 = no, 1 = yes
 OUTPUT_TYPE=4 # 0:=None 3:='.dat' 4:='.vtk
 
 run_j:
