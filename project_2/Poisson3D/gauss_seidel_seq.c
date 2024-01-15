@@ -8,26 +8,20 @@
 
 
 void
-gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
-    /*
-        NOTE: length of cube is from -1 to 1, so 2
-        delta is length/N -> 2/N
-    */
+gauss_seidel(double*** u, double*** f, int N, int iter_max, int *p_inter, double tolerance, bool verbose) {
+    // sequential version of gauss_seidel
 
     printf("runnig gs\n");
-    double time_start,time_end;
-    time_start = omp_get_wtime();
 
     double delta = 2.0 / (double)N;
     double h = (double)1 / 6;
-    double u_old;
+    double u_old, diff;
     double sqr_diff_acum=0,diff_avg=999;
     double Nm2p3;
     int iter =0;
 
     // Loop through Step
     while (iter<iter_max && diff_avg>tolerance)
-    // while (iter<iter_max)
     {
         sqr_diff_acum = 0; // reset diff for every iteration
         for (int i = 1; i < (N-1);i++){
@@ -42,32 +36,24 @@ gauss_seidel(double*** u, double*** f, int N, int iter_max, double tolerance) {
                         u[i][j-1][k] + \
                         u[i][j][k+1] + \
                         u[i][j][k-1] + \
-                        delta * delta * f[i][j][k]
+                        f[i][j][k]
                     );
-                    sqr_diff_acum += (u_old - u[i][j][k]) * (u_old - u[i][j][k]);
+                    diff = u_old - u[i][j][k];
+                    sqr_diff_acum += diff*diff;
                 }
             }
         }
-
-        // average difference
-        Nm2p3 = (N-2)*(N-2)*(N-2); // N-2 to the power of three
-        diff_avg = sqrt(sqr_diff_acum/Nm2p3);
-
-        if (iter % 100 == 0){
-            printf("iter: %d, diff_avg: %f\n",iter, diff_avg);
-        }
+        diff_avg = sqrt(sqr_diff_acum);
         iter++;
     }
 
     // Printing of results
-
-    char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
-    time_end = omp_get_wtime();
-    double time_total = (time_end - time_start);
-    
-    printf("\n--- Iterations stopped ---\n");
-    printf("reason: %s\n",reason);
-    printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
-    printf("wall time: %f\n",time_total);
+    if (verbose){
+        char *reason = iter==iter_max ? "max iterations reached": "tolerance reached";
+        printf("\n--- Iterations stopped ---\n");
+        printf("reason: %s\n",reason);
+        printf("Iteration: %d, diff_avg: %f\n", iter, diff_avg);
+    }
+    *p_inter = iter;
 }
 

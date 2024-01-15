@@ -27,7 +27,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, int 
                                     input[i][j+1][k] + 
                                     input[i][j][k-1] +
                                     input[i][j][k+1] +
-                                    delta * delta * f[i][j][k]);
+                                    f[i][j][k]);
                                                     
                 
                     dif += (output[i][j][k] - input[i][j][k]) * (output[i][j][k] - input[i][j][k]);
