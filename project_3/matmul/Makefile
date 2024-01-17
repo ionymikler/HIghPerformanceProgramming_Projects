@@ -27,8 +27,11 @@ DEF_M=100
 DEF_N=100
 DEF_K=100
 DEF_OMP_NUM_THREADS=2
-DEF_MFLOPS_MAX_IT=1
+DEF_MFLOPS_MAX_IT=10
 
 run:
 	@echo "running '$(TYPE)' '$(DEF_M)' '$(DEF_N)' '$(DEF_K)'"
 	OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS) MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(DEF_M) $(DEF_N) $(DEF_K)
+
+submit:
+	bsub < mm_batch_gpu.sub
