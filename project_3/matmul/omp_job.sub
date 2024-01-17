@@ -7,8 +7,8 @@
 # Author: Bernd Dammann <bd@cc.dtu.dk>
 #         Hans Henrik Brandenborg Sørensen <hhbs@dtu.dk>
 #
-#BSUB -J mm_batch_gpu
-#BSUB -o results/mm_batch_gpu_%J.out
+#BSUB -J omp_thread_tunning
+#BSUB -o results/omp_thread_tunning%J.out
 #BSUB -q hpcintrogpu
 
 ### -- set the email address -- 
@@ -33,33 +33,43 @@ EXECUTABLE=matmult_c.nvc++
 
 # define the mkn values in the MKN variable
 #
-SIZES="100 200 500 1000 2000 5000"
-# SIZES=$(seq 100 100 500) # Ns in steps of 5 from 10 to 100
+# SIZES="100 200 500 1000 2000"
+SIZES="5000"
+THREADS="1 2 4 8 16"
 
 # define the method type in TYPE
-#
-TYPE="mkn_offload"
+TYPE="mkn_omp"
 
 # enable(1)/disable(0) result checking
 export MATMULT_COMPARE=1
 export MFLOPS_MAX_IT=10
-export OMP_NUM_THREADS=12;
-#QUESTION: Should this be tuned?
-#QUESTION: does this overwrite the threads in the gpu?
-
 
 # load module for shared cuda libraries
 module load /appl9/nvhpc/2023_2311/modulefiles/nvhpc-nompi/23.11
 
 # start the collect command with the above settings
 TIME=$(date +"%H:%M:%S")
-RESULTS_FILE="results/results_${TIME}.txt"
-# echo "" > $RESULTS_FILE
 
-for S in $SIZES
+# Clean results directory
+results_dir="results/${TYPE}"
+# if [ -d "$results_dir" ];then
+#     rm -f $results_dir/*.txt;
+# else
+#     mkdir -p $results_dir;
+# fi
+
+for th in $THREADS
 do
-    # $S >> $RESULTS_FILE
-    ./matmult_c.nvc++ $TYPE $S $S $S >> $RESULTS_FILE
-    # result=$(./matmult_c.nvc++ $TYPE $S $S $S)
-    # echo "$S $results" >> "${RESULTS_FILE}"
+    results_file="results/${TYPE}/${TYPE}_${th}.txt"
+    # > "${results_file}"
+    OMP_NUM_THREADS=$th
+    for S in $SIZES
+    do
+        echo "Running $TYPE with S=$S and $th threads"
+        size="$S"
+        result=$(./matmult_c.nvc++ $TYPE $S $S $S)
+        echo "${S} ${result}" >> "${results_file}"
+    done
 done
+
+echo "Done"
