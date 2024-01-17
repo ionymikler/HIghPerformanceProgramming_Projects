@@ -5,6 +5,8 @@ extern "C"{
 #include <omp.h>
 #include "matmult_omp_lib.h"
 
+int NUM_TEAMS = 2, THREADS_PER_TEAM = 3;
+
 void init_C_dev(int m, int n, double **C, int num_teams, int threads_per_team){
     // Remember; array mapping is [lower:length], NOT [lower:upper]
     #pragma omp target teams distribute parallel for \
@@ -14,7 +16,7 @@ void init_C_dev(int m, int n, double **C, int num_teams, int threads_per_team){
     for (int i = 0; i < m; i++)
     {
         for (int j = 0; j < n; j++){
-                C[i][j] = 0.0;
+            C[i][j] = 0.0;
         }
     }
 
@@ -60,20 +62,28 @@ void matmult_mkn_omp(int m,int n,int k,double **A,double **B,double **C){
 }
 
 void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
-    int NUM_TEAMS = 2, THREADS_PER_TEAM = 1;
     init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
     
-    printf("Teams: %d, Th_id: %d. Sum of C initialized: %f\n",omp_get_team_num(), omp_get_thread_num(), get_sum_u(C, m));
-    // #pragma omp target teams distribute parallel for \
-    //     map(to:m,n,k, ) \
-        // shared(m,n,k)
+    #pragma omp target teams distribute parallel for \
+        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
         for (int row=0; row <m; row++){
             for (int q=0; q<k; q++){
                 for (int col=0; col < n; col++){
                     C[row][col] += A[row][q] * B[q][col];
                 }
             }
+        } // END PARALLEL FOR
+}
+
+void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
+    init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
+    for (int i = 0; i < m; i++){
+        for (int j = 0; j < n; j++){
+            for (int q = 0; q < k; q++){
+                C[i][j] += A[i][q] * B[q][j];
+            }
         }
+    }
 }
 
 void matmult_lib(int m, int n, int k, double **A, double **B, double **C){
