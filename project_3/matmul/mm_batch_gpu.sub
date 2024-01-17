@@ -15,19 +15,23 @@
 #BSUB -W 15
 #BSUB -R "span[hosts=1]"
 #BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -u s222695@dtu.dk
+#BSUB -N
+
 
 # define the driver name to use
 # valid values: matmult_c.nvc++, matmult_f.nvc++
 #
 EXECUTABLE=matmult_c.nvc++
-
+DEF_OMP_NUM_THREADS=12
+DEF_MFLOPS_MAX_IT=1
 # define the mkn values in the MKN variable
 #
 SIZES="100 200 500 1000 2000 5000"
 
 # define the method type in TYPE
 #
-TYPE="mnk_offload"
+TYPE="lib"
 
 # enable(1)/disable(0) result checking
 export MATMULT_COMPARE=0
@@ -35,8 +39,9 @@ export MATMULT_COMPARE=0
 # load module for shared cuda libraries
 module load /appl9/nvhpc/2023_2311/modulefiles/nvhpc-nompi/23.11
 
+echo $(lscpu) >> mm_batch_gpu_infra.out
 # start the collect command with the above settings
 for S in $SIZES
 do
-    ./$EXECUTABLE $TYPE $S $S $S
+    OMP_NUM_THREADS=${DEF_OMP_NUM_THREADS} MFLOPS_MAX_IT=${DEF_MFLOPS_MAX_IT} ./$EXECUTABLE $TYPE $S $S $S
 done
