@@ -117,14 +117,12 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
                     C[i+sii][j] = blk_items[sii];
                 }
             }else{ // elements in the last block (which is smaller)
-                double blk_items[BLK-m]; // All initialized to 0
-                for (int ii=0;ii=(BLK-m);ii++){
+                for (int ii=0;ii=(m-BLK);ii++){
+                    double c_elem;
                     for (int q=0; q<k; q++){
-                        blk_items[ii] = A[i+ii][q] * B[q][j];
+                        c_elem = A[i+ii][q] * B[q][j];
                     }
-                }
-                for (int sii=0;sii<(BLK-m);sii++){
-                    C[i+sii][j] = blk_items[sii];
+                    C[i+ii][j] = c_elem;
                 }
             }
         }
