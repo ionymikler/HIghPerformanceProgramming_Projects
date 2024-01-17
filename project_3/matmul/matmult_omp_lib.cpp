@@ -5,7 +5,7 @@ extern "C"{
 
 void init_C(int m,int n,double **C){
     #pragma omp parallel for collapse(2) \
-        shared(C) private(m,n)
+        shared(C, m,n )
     for (int i = 0; i < m; i++)
     {
         for (int j = 0; j < n; j++)
@@ -30,10 +30,9 @@ double get_sum_u(double **u, int N){
 
 void matmult_mkn_omp(int m,int n,int k,double **A,double **B,double **C){
     init_C(m,n,C);
-    // printf("sum of C: %f\n",get_sum_u(C,m));
     
-    // #pragma omp parallel for collapse(2) \
-    //     shared(A,B,C) private(m,n,k)
+    #pragma omp parallel for collapse(2) \
+        shared(A,B,C, m,n,k)
         for (int row=0; row <m; row++){
             for (int q=0; q<k; q++){
                 for (int col=0; col < n; col++){
