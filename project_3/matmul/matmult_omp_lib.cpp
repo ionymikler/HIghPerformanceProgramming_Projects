@@ -66,11 +66,11 @@ void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
     init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
     
     #pragma omp target teams distribute parallel for \
-        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
-        for (int row=0; row <m; row++){
-            for (int q=0; q<k; q++){
-                for (int col=0; col < n; col++){
-                    C[row][col] += A[row][q] * B[q][col];
+        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) 
+        for (int i = 0; i < m; i++){
+            for (int q = 0; q < k; q++){
+                for (int j = 0; j < n; j++){
+                    C[i][j] += A[i][q] * B[q][j];
                 }
             }
         } // END PARALLEL FOR
@@ -80,12 +80,14 @@ void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
     init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
 
     #pragma omp target teams distribute parallel for \
-        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
+        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) collapse(2)
     for (int i = 0; i < m; i++){
         for (int j = 0; j < n; j++){
+            double sum = 0.0;
             for (int q = 0; q < k; q++){
-                C[i][j] += A[i][q] * B[q][j];
+                sum += A[i][q] * B[q][j];
             }
+            C[i][j] = sum;
         }
     }
 }
