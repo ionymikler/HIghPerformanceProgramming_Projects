@@ -72,8 +72,6 @@ void matmult_mkn_omp(int m,int n,int k,double **A,double **B,double **C){
 
 void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
     init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
-    // printf("sum C: %f\n", get_sum_u(C, m));
-
 
     double start_t, end_t, dataoff_time, comp_time;
 	start_t = omp_get_wtime();
@@ -90,14 +88,13 @@ void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
                         C[i][j] += A[i][q] * B[q][j];
                     }
                 }
-        } // END PARALLEL FOR
+        } // END PARALLEL FOR, END DEVICE AREA
         comp_time= omp_get_wtime() - comp_time_s;
-        printf("Computation time: %f ms\n", comp_time*1000);
     } // END TARGET DATA
 
     end_t = omp_get_wtime();
     dataoff_time = (end_t - start_t) - comp_time;
-    printf("Computation time: %f ms\n", comp_time);
+    printf("Computation time: %f ms\n", comp_time*1000);
     printf("Data offload time: %f ms\n", dataoff_time*1000);
     
 }
