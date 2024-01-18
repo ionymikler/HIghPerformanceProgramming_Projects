@@ -14,7 +14,7 @@
 ### -- set the email address -- 
 ### -- send notification at start -- 
 ### -- send notification at completion -- 
-#BSUB -u s222695@dtu.dk
+#BSUB -u s222962@dtu.dk
 #BSUB -B
 #BSUB -N
 
@@ -33,9 +33,9 @@ EXECUTABLE=matmult_c.nvc++
 
 # define the mkn values in the MKN variable
 #
-# SIZES="100 200 500 1000 2000"
-SIZES="5000"
-THREADS="1 2 4 8 16"
+SIZES="100 200 500 1000 2000 3000 4500 5000"
+# SIZES="5000"
+THREADS="1 2 4 8 12 16 24"
 
 # define the method type in TYPE
 TYPE="mkn_omp"
