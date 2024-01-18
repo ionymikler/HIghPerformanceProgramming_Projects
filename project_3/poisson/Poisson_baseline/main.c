@@ -8,20 +8,27 @@
 #include <math.h>
 #include "alloc3d.h"
 #include "cube_utils.h"
-#include "jacobi.h"
 #include "print.h"
-// #include "solver.h"
+#include "solver.h"
 
-#define N_DEFAULT 100
+// #ifdef _JACOBI
+// #include "jacobi.h"
+// #endif
+
+// #ifdef _GAUSS_SEIDEL
+// #include "gauss_seidel.h"
+// #endif
+
+// #define N_DEFAULT 100
 
 int
 main(int argc, char *argv[]) {
 
     // Default parameters
-    int 	N = N_DEFAULT;
-    int 	iter_max = 5000;
+    int 	N = 100;
+    int 	iter_max = 25000;
     double	tolerance = 1e-5;
-    double	start_T = 10; // mid of 0 and 20
+    double	start_T = 0; // mid of 0 and 20
     int		output_type = 0;
     bool    verbose = false;
     int     thread_num = 1;
@@ -32,15 +39,15 @@ main(int argc, char *argv[]) {
 
 
     /* get the paramters from the command line */
-    N         = atoi(argv[1]);	// grid size
-    iter_max  = atoi(argv[2]);  // max. no. of iterations
-    tolerance = atof(argv[3]);  // tolerance
-    start_T   = atof(argv[4]);  // start T for all inner grid points
-    thread_num = atoi(argv[5]);  // number of threads
-    verbose   = atoi(argv[6]);  // verbose output
-    if (argc == 8) {
-	output_type = atoi(argv[7]);  // ouput type
-    }
+    // N         = atoi(argv[1]);	// grid size
+    // iter_max  = atoi(argv[2]);  // max. no. of iterations
+    // tolerance = atof(argv[3]);  // tolerance
+    // start_T   = atof(argv[4]);  // start T for all inner grid points
+    // thread_num = atoi(argv[5]);  // number of threads
+    // verbose   = atoi(argv[6]);  // verbose output
+    // if (argc == 8) {
+	// output_type = atoi(argv[7]);  // ouput type
+    // }
     
     // printf("Num threads: %d\n",omp_get_max_threads());
 
@@ -61,11 +68,18 @@ main(int argc, char *argv[]) {
         exit(-1);
     }
 
+    #ifdef _JACOBI
     if ( (output_u = malloc_3d(N, N, N)) == NULL ) {
         perror("array u: allocation failed");
         exit(-1);
     }
     init_cube(output_u, N, start_T);
+    #endif
+
+    // Init the u cube
+    init_cube(u, N, start_T); // TODO: add sanity check of high temp in corners
+    // init force
+    init_force(f, N);
 
     if (verbose){printf("\nrunning solver\n");}
     double time_start,time_end;
@@ -73,7 +87,7 @@ main(int argc, char *argv[]) {
     // All the magic happens here
     int iter = 0;
     int *p_iter = &iter;
-    jacobi(u, output_u, f, N, iter_max);
+    solve(u, output_u, f, N, iter_max, p_iter, tolerance, verbose);
     // All the magic ends here
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);

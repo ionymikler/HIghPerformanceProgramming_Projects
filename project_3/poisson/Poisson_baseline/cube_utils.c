@@ -27,9 +27,10 @@ void populate_range(double ***p, int startsEnds[6], double val){
 }
 
 void populate_walls(double ***p, int N, double temp){
+    int i;
     // TODO: Make the 8 cube corners have a very very large value for sanity check
     // TODO: There must be a smarter way to do this
-    for (int i = 0; i < N; i++){
+   for (int i = 0; i < N; i++){
         for (int j = 0; j < N; j++){
             p[0][i][j] = temp;
             p[N-1][i][j] = temp;

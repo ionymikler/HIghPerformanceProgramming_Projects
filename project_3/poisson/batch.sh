@@ -45,7 +45,7 @@ threds=8
 
 for N in $Ns
 do
-    OMP_NUM_THREADS=$threds ./Poisson_baseline/poisson $N $iterations $startT $tolerance $threds 0 0 # cpu parralize
+    OMP_NUM_THREADS=$threds ./Poisson_baseline/poisson_j $N $iterations $startT $tolerance $threds 0 0 # cpu parralize
     ./Poisson_map/poisson $N $iterations $startT
     # ./Poisson_memcpy/poisson $N $iterations $startT
 done
@@ -55,7 +55,7 @@ done
 
 for N in $Ns
 do
-    OMP_NUM_THREADS=$threds ./Poisson_barline_ES/poisson $N $iterations $startT $tolerance $threds 0 0
+    OMP_NUM_THREADS=$threds ./Poisson_barline_ES/poisson_j $N $iterations $startT $tolerance $threds 0 0
     ./Poisson_map_ES/poisson $N $iterations $startT $tolerance
     # ./Poisson_memcpy_barline/poisson $N $iterations $startT $tolerance
 done

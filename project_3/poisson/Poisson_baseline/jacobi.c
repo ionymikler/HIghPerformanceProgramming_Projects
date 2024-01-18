@@ -7,19 +7,18 @@
 #include <omp.h>
 
 void
-jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
+jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
     printf("Runnin g jacobi complex: \n");
 
     // delta = 2 / N where N is the number of points 
     int i, j, k;
+    double ***temp;
     double h = 1/6.0;
     double time_start,time_end;
-    double ***temp;
     time_start = omp_get_wtime();
 
     int steps = 0;
-
-    for (steps=0; steps < iter_max; steps++){
+    while ( steps < iter_max){
         #pragma omp parallel shared(N,h, input,f,output,steps) private(i,j,k)
         {
             #pragma omp for
@@ -36,14 +35,15 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
                                         f[i][j][k]);
                     }
                 }
-            }
-            temp = output;
-            output = input;
-            input = temp;
-        }
+            } //implicit barrier here
+        } // end of parralized section
+        temp = output;
+        output = input;
+        input = temp;
+
         steps++;
     }
-    // char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
+    char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
 
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
@@ -55,7 +55,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
     double FLOPS = MLUP * 10/time_total;
     int thread = omp_get_max_threads();
 
-    FILE *fptr = fopen("results.txt","a");
+    FILE *fptr = fopen("results_thread_j_p.txt","a");
     fprintf(fptr, "%d ", N); // grid
     fprintf(fptr, "%f ", time_total); // time
     fprintf(fptr, "%d ", steps); // steps
