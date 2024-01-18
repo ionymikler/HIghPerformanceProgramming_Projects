@@ -100,68 +100,91 @@ void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
 }
 
 void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
-    init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
+    // init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
 
-    #pragma omp target teams distribute parallel for \
-        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) collapse(2)
-    for (int i = 0; i < m; i++){
-        for (int j = 0; j < n; j++){
-            double sum = 0.0;
-            for (int q = 0; q < k; q++){
-                sum += A[i][q] * B[q][j];
+    double start_t, end_t, dataoff_time, comp_time;
+	start_t = omp_get_wtime();
+    #pragma omp target data \
+        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
+    {
+        double comp_time_s= omp_get_wtime();
+        #pragma omp target teams distribute parallel for \
+            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) collapse(2)
+        for (int i = 0; i < m; i++){
+            for (int j = 0; j < n; j++){
+                double sum = 0.0;
+                for (int q = 0; q < k; q++){
+                    sum += A[i][q] * B[q][j];
+                }
+                C[i][j] = sum;
             }
-            C[i][j] = sum;
-        }
-    } // END PARALLEL FOR
+        } // END PARALLEL FOR
+        comp_time= omp_get_wtime() - comp_time_s;
+    } // END TARGET DATA
+
+    end_t = omp_get_wtime();
+    dataoff_time = (end_t - start_t) - comp_time;
+    printf("Computation time: %f ms\n", comp_time*1000);
+    printf("Data offload time: %f ms\n", dataoff_time*1000);
 }
 
 void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
     #define BLK 5
     double start_time = omp_get_wtime();
 
-    #pragma omp target teams distribute parallel for collapse(2) \
+    double start_t, end_t, dataoff_time, comp_time;
+	start_t = omp_get_wtime();
+    #pragma omp target data \
         map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
-    for (int i = 0; i < m; i+=BLK){
-        for (int j = 0; j < n; j++){
-            if (i + BLK - 1 < m){
-                double blk_items[BLK] = {0};
-                for (int q=0; q<k; q++){
-                    for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
-                        blk_items[ii] += A[i+ii][q] * B[q][j];
-                    }
-                }
-                for (int sii=0;sii<BLK;sii++){
-                    C[i+sii][j] = blk_items[sii];
-                }
-            }else{ // elements in the (smaller) last block
-                // version 1
-                for (int ii=0;ii<(m%BLK);ii++){
-                    double sum = 0;
+    {
+        double comp_time_s= omp_get_wtime();
+        #pragma omp target teams distribute parallel for collapse(2) \
+            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
+        for (int i = 0; i < m; i+=BLK){
+            for (int j = 0; j < n; j++){
+                if (i + BLK - 1 < m){
+                    double blk_items[BLK] = {0};
                     for (int q=0; q<k; q++){
-                        sum += A[i+ii][q] * B[q][j];
+                        for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
+                            blk_items[ii] += A[i+ii][q] * B[q][j];
+                        }
                     }
-                    C[i+ii][j] = sum;
-                }
-                // version 2
-                // double *sum = (double*) malloc((m%BLK)*sizeof(double));
-                // for (int ii=0;ii<(m%BLK);ii++){
-                //     sum[ii] = 0;
-                // }
-                // for (int q=0; q<k; q++){
-                //     for (int ii=0;ii<(m%BLK);ii++){
-                //         sum[ii] += A[i+ii][q] * B[q][j];
-                //     }
-                // }
-                // for (int ii=0;ii<(m%BLK);ii++){
-                //     C[i+ii][j] = sum[ii];
-                // }
-                // free(sum);
-            } // END IF
-        }
-    }// END PARALLEL FOR
+                    for (int sii=0;sii<BLK;sii++){
+                        C[i+sii][j] = blk_items[sii];
+                    }
+                }else{ // elements in the (smaller) last block
+                    // version 1
+                    for (int ii=0;ii<(m%BLK);ii++){
+                        double sum = 0;
+                        for (int q=0; q<k; q++){
+                            sum += A[i+ii][q] * B[q][j];
+                        }
+                        C[i+ii][j] = sum;
+                    }
+                    // version 2
+                    // double *sum = (double*) malloc((m%BLK)*sizeof(double));
+                    // for (int ii=0;ii<(m%BLK);ii++){
+                    //     sum[ii] = 0;
+                    // }
+                    // for (int q=0; q<k; q++){
+                    //     for (int ii=0;ii<(m%BLK);ii++){
+                    //         sum[ii] += A[i+ii][q] * B[q][j];
+                    //     }
+                    // }
+                    // for (int ii=0;ii<(m%BLK);ii++){
+                    //     C[i+ii][j] = sum[ii];
+                    // }
+                    // free(sum);
+                } // END IF
+            }
+        }// END PARALLEL FOR
+        comp_time= omp_get_wtime() - comp_time_s;
+    } // END TARGET DATA
 
-    double end_time = omp_get_wtime();
-    printf("total time: %f ms\n", (end_time - start_time)*1000);
+    end_t = omp_get_wtime();
+    dataoff_time = (end_t - start_t) - comp_time;
+    printf("Computation time: %f ms\n", comp_time*1000);
+    printf("Data offload time: %f ms\n", dataoff_time*1000);
 }
 
 void matmult_lib(int m, int n, int k, double **A, double **B, double **C){

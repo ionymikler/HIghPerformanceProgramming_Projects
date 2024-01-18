@@ -32,7 +32,7 @@ N=$(DEF_N)
 
 run:
 	@echo "running '$(TYPE)' '$(N)'"
-	OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS) MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(N) ${N} $(N)
+	MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(N) ${N} $(N)
 
 submit:
 	bsub < mm_batch_gpu.sub
