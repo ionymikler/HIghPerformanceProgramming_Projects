@@ -11,23 +11,25 @@ extern "C"{
 
 int NUM_TEAMS = 114, THREADS_PER_TEAM = 32; //QUESTION: How mamy threads per team
 
+void saveToFile(char myString[100], char filename[100]){
+    FILE *fp;
+    fp = fopen(filename, "a");
+    fprintf(fp, "%s", myString);
+    fclose(fp);
+}
+
 void init_C_dev(int m, int n, double **C, int num_teams, int threads_per_team){
     // Remember; array mapping is [lower:length], NOT [lower:upper]
     // TODO: Tune TEAMS anf THREADS values
-    #pragma omp target data map(alloc:C[0:m][0:n])
-    {
         #pragma omp target teams distribute parallel for \
             num_teams(num_teams) thread_limit(threads_per_team) \
             collapse(2)
-            // map(to:m,n), map(from:C[0:m][0:n])
         for (int i = 0; i < m; i++)
         {
             for (int j = 0; j < n; j++){
                 C[i][j] = 0.0;
             }
         }
-    }
-
 }
 
 void init_C(int m,int n,double **C){
@@ -71,13 +73,13 @@ void matmult_mkn_omp(int m,int n,int k,double **A,double **B,double **C){
 }
 
 void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
-    init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
 
     double start_t, end_t, dataoff_time, comp_time;
 	start_t = omp_get_wtime();
     #pragma omp target data \
         map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
     {
+        init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
         double comp_time_s= omp_get_wtime();
         #pragma omp target teams distribute parallel for \
             map(to:m,n,k,A[0:m][0:k],B[0:k][0:n])\
@@ -94,13 +96,17 @@ void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
 
     end_t = omp_get_wtime();
     dataoff_time = (end_t - start_t) - comp_time;
-    printf("Computation time: %f ms\n", comp_time*1000);
-    printf("Data offload time: %f ms\n", dataoff_time*1000);
+
+    // Save results to file
+    char myString[100]; // Allocate memory for myString array
+    sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
+
+    saveToFile(myString, "results/timings/timing_mkn_offload.txt");
+    // printf("%s", myString);
     
 }
 
 void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
-    // init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
 
     double start_t, end_t, dataoff_time, comp_time;
 	start_t = omp_get_wtime();
@@ -124,12 +130,17 @@ void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
 
     end_t = omp_get_wtime();
     dataoff_time = (end_t - start_t) - comp_time;
-    printf("Computation time: %f ms\n", comp_time*1000);
-    printf("Data offload time: %f ms\n", dataoff_time*1000);
+    
+    // Save results to file
+    char myString[100]; // Allocate memory for myString array
+    sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
+    
+    saveToFile(myString, "results/timings/timing_mnk_offload.txt");
+    // printf("%s", myString);
 }
 
 void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
-    #define BLK 5
+    #define BLK 4
     double start_time = omp_get_wtime();
 
     double start_t, end_t, dataoff_time, comp_time;
@@ -183,8 +194,14 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
 
     end_t = omp_get_wtime();
     dataoff_time = (end_t - start_t) - comp_time;
-    printf("Computation time: %f ms\n", comp_time*1000);
-    printf("Data offload time: %f ms\n", dataoff_time*1000);
+
+    // Save results to file
+    char myString[100]; // Allocate memory for myString array
+    sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
+    
+    saveToFile(myString, "results/timings/timing_blk_offload.txt");
+    // printf("%s", myString);
+
 }
 
 void matmult_lib(int m, int n, int k, double **A, double **B, double **C){
