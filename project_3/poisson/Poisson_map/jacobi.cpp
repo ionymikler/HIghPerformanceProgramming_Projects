@@ -42,9 +42,9 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
     }
     }
 
-    if (step%2 != 0){
-        output = input;
-    }
+    // if (step%2 != 0){
+    //     output = input;
+    // }
 
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);
@@ -54,7 +54,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
     double MLUP = pow(N-2,3)*iter_max*pow(10,-6);
     double FLOPS = MLUP * 10/time_total;
 
-    FILE *fptr = fopen("results_thread.txt","a");
+    FILE *fptr = fopen("results.txt","a");
     fprintf(fptr, "%d ", N); // grid
     fprintf(fptr, "%f ", time_total); // time
     fprintf(fptr, "%d ", iter_max); // steps
