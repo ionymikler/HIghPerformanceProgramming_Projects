@@ -23,15 +23,16 @@ clean:
 	@/bin/rm -f $(TARGET) $(OBJS)
 
 TYPE=mkn_offload
-DEF_N=50
+DEF_N=500
 DEF_M=$(DEF_N)
 DEF_K=$(DEF_M)
 DEF_OMP_NUM_THREADS=8
 DEF_MFLOPS_MAX_IT=10
+N=$(DEF_N)
 
 run:
-	@echo "running '$(TYPE)' '$(DEF_N)'"
-	OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS) MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(DEF_N) ${DEF_M} $(DEF_K)
+	@echo "running '$(TYPE)' '$(N)'"
+	OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS) MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(N) ${N} $(N)
 
 submit:
 	bsub < mm_batch_gpu.sub
