@@ -30,8 +30,8 @@ DEF_OMP_NUM_THREADS=8
 DEF_MFLOPS_MAX_IT=10
 
 run:
-	@echo "running '$(TYPE)' '$(DEF_M)' '$(DEF_N)' '$(DEF_K)'"
-	OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS) MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(DEF_M) $(DEF_N) $(DEF_K)
+	@echo "running '$(TYPE)' '$(DEF_N)'"
+	OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS) MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(DEF_N) ${DEF_M} $(DEF_K)
 
 submit:
 	bsub < mm_batch_gpu.sub
