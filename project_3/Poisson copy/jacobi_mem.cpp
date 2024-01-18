@@ -21,7 +21,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     time_start = omp_get_wtime();
 
     int steps = 0;
-    while ( steps < iter_max){
+    while ( steps < iter_max && dif > tolerance1){
         dif = 0;
         #pragma omp parallel reduction(+ : dif) shared(N,h, input,f,output,delta,steps) private(i,j,k,d)
         {
@@ -38,8 +38,8 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
                                         input[i][j][k+1] +
                                         f[i][j][k]);
                                                         
-                        // d = output[i][j][k] - input[i][j][k];
-                        // dif += d*d;
+                        d = output[i][j][k] - input[i][j][k];
+                        dif += d*d;
                     }
                 }
             } //implicit barrier here
@@ -54,7 +54,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         } // end of parralized section
         steps++;
     }
-    char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
+    // char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
 
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);

@@ -7,23 +7,19 @@
 #include <omp.h>
 
 void
-jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
+jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
     printf("Runnin g jacobi complex: \n");
 
     // delta = 2 / N where N is the number of points 
-    double delta = 2.0 / (double)N;
     int i, j, k;
-    double d;
-    double dif = 10000.0;
     double h = 1/6.0;
     double time_start,time_end;
-    double tolerance1 = tolerance*tolerance;
     time_start = omp_get_wtime();
 
     int steps = 0;
-    while ( steps < iter_max){
-        dif = 0;
-        #pragma omp parallel reduction(+ : dif) shared(N,h, input,f,output,delta,steps) private(i,j,k,d)
+
+    for (steps=0; steps < iter_max; steps++){
+        #pragma omp parallel shared(N,h, input,f,output,steps) private(i,j,k)
         {
             #pragma omp for
             for (i = 1; i < (N-1);i++){
@@ -37,9 +33,6 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
                                         input[i][j][k-1] +
                                         input[i][j][k+1] +
                                         f[i][j][k]);
-                                                        
-                        // d = output[i][j][k] - input[i][j][k];
-                        // dif += d*d;
                     }
                 }
             } //implicit barrier here
@@ -54,7 +47,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         } // end of parralized section
         steps++;
     }
-    char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
+    // char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
 
     time_end = omp_get_wtime();
     double time_total = (time_end - time_start);

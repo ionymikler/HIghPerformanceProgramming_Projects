@@ -1,0 +1,1226 @@
+Loaded dependency [python3/3.10.13]: gcc/11.4.0-binutils-2.40
+Loaded dependency [python3/3.10.13]: sqlite3/3.44.2
+Loaded module: python3/3.10.13
+
+Loading python3/3.10.13
+  Loading requirement: gcc/11.4.0-binutils-2.40 sqlite3/3.44.2
+Another version of gcc is loaded. Use "module swap gcc/6.4.0" instead.
+
+Loading gcc/6.4.0
+  ERROR: Module evaluation aborted
+-- Poisson solver ---
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 234 
+solver done
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.002238
+-- Poisson solver ---
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 234 
+solver done
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.001481
+-- Poisson solver ---
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 234 
+solver done
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.001289
+-- Poisson solver ---
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 234 
+solver done
+-- solver Parameters---
+N: 10
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.003522
+-- Poisson solver ---
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 564 
+solver done
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.005637
+-- Poisson solver ---
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 564 
+solver done
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.004579
+-- Poisson solver ---
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 564 
+solver done
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.003687
+-- Poisson solver ---
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 564 
+solver done
+-- solver Parameters---
+N: 15
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.005736
+-- Poisson solver ---
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.020055
+-- Poisson solver ---
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.012949
+-- Poisson solver ---
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.009328
+-- Poisson solver ---
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 20
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.007959
+-- Poisson solver ---
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.039633
+-- Poisson solver ---
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.022593
+-- Poisson solver ---
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.013630
+-- Poisson solver ---
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 25
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.011043
+-- Poisson solver ---
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.077920
+-- Poisson solver ---
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.037335
+-- Poisson solver ---
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.020546
+-- Poisson solver ---
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 30
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.014491
+-- Poisson solver ---
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.117191
+-- Poisson solver ---
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.065419
+-- Poisson solver ---
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.032992
+-- Poisson solver ---
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 35
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.020702
+-- Poisson solver ---
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.183049
+-- Poisson solver ---
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.092894
+-- Poisson solver ---
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.048577
+-- Poisson solver ---
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 40
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.027005
+-- Poisson solver ---
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.247565
+-- Poisson solver ---
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.134310
+-- Poisson solver ---
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.068437
+-- Poisson solver ---
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 45
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.039010
+-- Poisson solver ---
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.349842
+-- Poisson solver ---
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.179020
+-- Poisson solver ---
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.094171
+-- Poisson solver ---
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 50
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.056817
+-- Poisson solver ---
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.458089
+-- Poisson solver ---
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.239573
+-- Poisson solver ---
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.127315
+-- Poisson solver ---
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 55
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.073982
+-- Poisson solver ---
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.629993
+-- Poisson solver ---
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.315087
+-- Poisson solver ---
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.167400
+-- Poisson solver ---
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 60
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.093993
+-- Poisson solver ---
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.749628
+-- Poisson solver ---
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.389974
+-- Poisson solver ---
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.200954
+-- Poisson solver ---
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 65
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.104652
+-- Poisson solver ---
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.952629
+-- Poisson solver ---
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.489453
+-- Poisson solver ---
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.257166
+-- Poisson solver ---
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 70
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.136262
+-- Poisson solver ---
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+wall time: 1.199498
+-- Poisson solver ---
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.627123
+-- Poisson solver ---
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.329375
+-- Poisson solver ---
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 75
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.175032
+-- Poisson solver ---
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+wall time: 1.445014
+-- Poisson solver ---
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.734766
+-- Poisson solver ---
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.384361
+-- Poisson solver ---
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 80
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.203266
+-- Poisson solver ---
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+wall time: 1.710967
+-- Poisson solver ---
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.866180
+-- Poisson solver ---
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.441979
+-- Poisson solver ---
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 85
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.242796
+-- Poisson solver ---
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+wall time: 2.167155
+-- Poisson solver ---
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+wall time: 1.117796
+-- Poisson solver ---
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.579763
+-- Poisson solver ---
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 90
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.300770
+-- Poisson solver ---
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+wall time: 2.362131
+-- Poisson solver ---
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+wall time: 1.213549
+-- Poisson solver ---
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.633701
+-- Poisson solver ---
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 95
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.326504
+-- Poisson solver ---
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+Threads: 1
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+wall time: 2.804614
+-- Poisson solver ---
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+Threads: 2
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+wall time: 1.427317
+-- Poisson solver ---
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+Threads: 4
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.741398
+-- Poisson solver ---
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+Threads: 8
+
+running solver
+Runnin g jacobi complex: 
+iter 1000 
+solver done
+-- solver Parameters---
+N: 100
+iter max: 1000
+tolerance: 0.000010
+wall time: 0.400492

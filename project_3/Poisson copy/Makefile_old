@@ -1,0 +1,57 @@
+TARGET= poisson
+
+TARGET_MAP  = poisson_map		# Jacobi
+TARGET_MEM = poisson_mem		# Gauss-Seidel
+
+OBJS	= init.o \
+		# jacobi_map.o \
+        # jacobi_mem.o \
+        # init.o \
+		# main.o 
+        # alloc3d.o 
+        # print.o 
+        # input.o 
+
+MAIN_MAP = main_map.o
+MAIN_MEM = main_mem.o
+
+OBJS_MAP	= $(MAIN_MAP) jacobi_map.o
+OBJS_MEM	= $(MAIN_MEM) jacobi_mem.o
+
+
+CC	= nvc
+CXX	= nvc++
+
+OPT	= -g -fast -Msafeptr -Minfo -acc -mp=gpu -gpu=pinned -gpu=cc90 -gpu=lineinfo -cuda -mp=noautopar
+ISA	=
+PARA	=
+INC   =
+LIBS	=
+
+CFLAGS = $(OPT) $(INC) $(ISA) $(PARA) $(XOPT)
+CXXFLAGS = $(OPT) $(INC) $(ISA) $(PARA) $(XOPT)
+
+all: $(TARGET_MAP) $(TARGET_MEM)
+
+$(TARGET_MAP): $(OBJS_MAP) $(OBJS)
+	$(CXX) -o $@ $(CXXFLAGS) $(OBJS_MAP) $(OBJS) $(LIBS)
+
+$(TARGET_MEM): $(OBJS_MEM) $(OBJS)
+	$(CXX) -o $@ $(CXXFLAGS) $(OBJS_MEM) $(OBJS) $(LIBS)
+
+
+$(MAIN_MAP):
+	$(CXX) -o $@ -_JACOBI_MAP $(CXXFLAGS) -c main.cpp
+
+$(MAIN_MEM):
+	$(CXX) -o $@ -_JACOBI_MEM $(CXXFLAGS) -c main.cpp
+
+
+$(TARGET): $(OBJS) 
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LIBS)
+clean:
+	@/bin/rm -f *.o $(TARGET)
+
+main_map.o: main.cpp jacobi_map.h init.h #solver.h print.h 
+main_mem.o: main.cpp jacobi_mem.h init.h #solver.h print.h 
+
