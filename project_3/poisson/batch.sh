@@ -32,15 +32,16 @@
 
 Ns="10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100"
 
-iterations=25000
-tolerance=0.0
-startT=0
 
 rm -f "Poisson_map_baseline/results.txt"
 rm -f "Poisson_map/results.txt"
 rm -f "Poisson_map_ES/results.txt"
 
-# Compare data transfering strategies
+
+# === Compare data transfering strategies
+
+iterations=25000
+startT=0
 for N in $Ns
 do
     ./Poisson_baseline/poisson $N $iterations $startT # cpu parralize
@@ -48,13 +49,19 @@ do
     # ./Poisson_memcpy/poisson $N $iterations $startT
 done
 
-# running same results with stopping criteria
+
+# === compare gpu and cpu parallization with stopping criteria
+
+tolerance=0.0
 for N in $Ns
 do
-    # ./Poisson_barline_ES/poisson $N $iterations $startT $tolerance
+    ./Poisson_barline_ES/poisson $N $iterations $startT $tolerance
     ./Poisson_map_ES/poisson $N $iterations $startT $tolerance
     # ./Poisson_memcpy_barline/poisson $N $iterations $startT $tolerance
 done
+
+# === compare 1 gpu with 2 gpus
+
 
 
 exit 0
