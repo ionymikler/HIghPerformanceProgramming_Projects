@@ -14,6 +14,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
     int i, j, k;
     double h = 1/6.0;
     double time_start,time_end;
+    double ***temp;
     time_start = omp_get_wtime();
 
     int steps = 0;
@@ -35,16 +36,11 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
                                         f[i][j][k]);
                     }
                 }
-            } //implicit barrier here
-            #pragma omp for
-            for (i = 0; i < N; i++) {
-                for (j  = 0; j < N; j++) {
-                    for ( k = 0; k < N; k++) {
-                        input[i][j][k] = output[i][j][k];
-                    }
-                }
-            }//implicit barrier here
-        } // end of parralized section
+            }
+            temp = output;
+            output = input;
+            input = temp;
+        }
         steps++;
     }
     // char *reason = steps==iter_max ? "max iterations reached": "tolerance reached";
