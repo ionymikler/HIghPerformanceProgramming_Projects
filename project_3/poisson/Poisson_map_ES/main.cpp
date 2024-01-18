@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     int N         = atoi(argv[1]);	// grid size
     int iter_max  = atoi(argv[2]);  // max. no. of iterations
     double start_T   = atof(argv[3]);  // start T for all inner grid points
+    double tolerance   = atof(argv[4]);  // start T for all inner grid points
     double 	***u = NULL;
     double 	***output_u = NULL;
     double  ***f =  NULL;
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
     // init force
     init_force(f, N);
 
-    jacobi(u, output_u, f, N, iter_max);
+    jacobi(u, output_u, f, N, iter_max, tolerance);
 
     char	output_filename[FILENAME_MAX];
     sprintf(output_filename, "%s_%d%s", "ExampleJaco", N, ".vtk");

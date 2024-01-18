@@ -37,8 +37,8 @@ print_vtk(const char *fname, int n, double ***u) {
     size_t written;
     size_t items = n * n * n;
     size_t i;
-    int b;
-    unsigned char tmp;
+    // int b;
+    // unsigned char tmp;
 
     if ( (f_ptr = fopen(fname, "w")) == NULL ) {
        perror("No output! fopen()");

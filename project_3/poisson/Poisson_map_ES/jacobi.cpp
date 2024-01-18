@@ -10,7 +10,8 @@ void
 jacobi(double*** input, double*** output, double*** f, int N, int iter_max, double tolerance) {
     printf("Runnin g jacobi: \n");
 
-    int i, j, k, step;
+    int i, j, k;
+    int step=0;
     double h = 1/6.0;
     double time_start,time_end;
     double ***temp;
@@ -24,7 +25,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     {
     double timer_S = omp_get_wtime();
     while (step < iter_max && dif > tolerance1){ 
-        step = 0;
+        dif = 0;
         #pragma omp target teams distribute parallel for collapse (3)
         for (i = 1; i < (N-1);i++){
             for ( j = 1; j < (N-1); j++){
