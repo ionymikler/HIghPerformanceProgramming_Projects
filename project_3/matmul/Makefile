@@ -26,11 +26,12 @@ TYPE=mkn_offload
 DEF_N=500
 DEF_M=$(DEF_N)
 DEF_K=$(DEF_M)
-DEF_OMP_NUM_THREADS=8
+DEF_OMP_NUM_THREADS=1
 DEF_MFLOPS_MAX_IT=10
 N=$(DEF_N)
 
 run:
+	export OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS)
 	@echo "running '$(TYPE)' '$(N)'"
 	MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(N) ${N} $(N)
 

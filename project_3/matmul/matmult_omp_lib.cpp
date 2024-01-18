@@ -9,13 +9,14 @@ extern "C"{
     __typeof__ (b) _b = (b); \
     _a <= _b ? _a : _b; })
 
-int NUM_TEAMS = 114, THREADS_PER_TEAM = 32; //QUESTION: How mamy threads per team
+int NUM_TEAMS = 114, THREADS_PER_TEAM = 32; //QUESTION: How man y threads per team
 
 void saveToFile(char myString[100], char filename[100]){
-    FILE *fp;
-    fp = fopen(filename, "a");
-    fprintf(fp, "%s", myString);
-    fclose(fp);
+    // printf("Saving to file\n");
+    // FILE *fp;
+    // fp = fopen(filename, "a");
+    // fprintf(fp, "%s", myString);
+    // fclose(fp);
 }
 
 void init_C_dev(int m, int n, double **C, int num_teams, int threads_per_team){
@@ -101,7 +102,8 @@ void matmult_mkn_offload(int m,int n,int k,double **A,double **B,double **C){
     char myString[100]; // Allocate memory for myString array
     sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
 
-    saveToFile(myString, "results/timings/timing_mkn_offload.txt");
+    char filename[100] = "results/timings/timing_mkn_offload.txt";
+    saveToFile(myString, filename);
     // printf("%s", myString);
     
 }
@@ -135,7 +137,8 @@ void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
     char myString[100]; // Allocate memory for myString array
     sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
     
-    saveToFile(myString, "results/timings/timing_mnk_offload.txt");
+    char filename[100] = "results/timings/timing_mnk_offload.txt";
+    saveToFile(myString, filename);
     // printf("%s", myString);
 }
 
@@ -150,7 +153,8 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
     {
         double comp_time_s= omp_get_wtime();
         #pragma omp target teams distribute parallel for collapse(2) \
-            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
+            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) \
+            num_teams((m/BLK)) thread_limit(THREADS_PER_TEAM)
         for (int i = 0; i < m; i+=BLK){
             for (int j = 0; j < n; j++){
                 if (i + BLK - 1 < m){
@@ -199,8 +203,86 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
     char myString[100]; // Allocate memory for myString array
     sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
     
-    saveToFile(myString, "results/timings/timing_blk_offload.txt");
+    char filename[100] = "results/timings/timing_blk_offload.txt";
+    saveToFile(myString, filename);
     // printf("%s", myString);
+
+}
+
+void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
+    #define BLK 4
+    #define SPLITS 5
+    double start_time = omp_get_wtime();
+
+    double start_t, end_t, dataoff_time, comp_time;
+	start_t = omp_get_wtime();
+    // #pragma omp target data \
+    //     map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
+    // {
+    double comp_time_s= omp_get_wtime();
+    #pragma omp parallel for
+    for (int s=0;s<SPLITS;++s){
+        int length = m / SPLITS;
+        int start = s * length;
+
+        #pragma omp target teams distribute parallel for \
+        map(to:m,n,k,A[start:length][0:k],B[0:k][0:n]), map(from:C[start:length][0:n]) \
+        num_teams(length) thread_limit(THREADS_PER_TEAM) \
+        collapse(2)            
+        for (int i = 0; i < m; i+=BLK){
+            for (int j = 0; j < n; j++){
+                if (i + BLK - 1 < m){
+                    double blk_items[BLK] = {0};
+                    for (int q=0; q<k; q++){
+                        for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
+                            blk_items[ii] += A[i+ii][q] * B[q][j];
+                        }
+                    }
+                    for (int sii=0;sii<BLK;sii++){
+                        C[i+sii][j] = blk_items[sii];
+                    }
+                }else{ // elements in the (smaller) last block
+                    // version 1
+                    for (int ii=0;ii<(m%BLK);ii++){
+                        double sum = 0;
+                        for (int q=0; q<k; q++){
+                            sum += A[i+ii][q] * B[q][j];
+                        }
+                        C[i+ii][j] = sum;
+                    }
+                    // version 2
+                    // double *sum = (double*) malloc((m%BLK)*sizeof(double));
+                    // for (int ii=0;ii<(m%BLK);ii++){
+                    //     sum[ii] = 0;
+                    // }
+                    // for (int q=0; q<k; q++){
+                    //     for (int ii=0;ii<(m%BLK);ii++){
+                    //         sum[ii] += A[i+ii][q] * B[q][j];
+                    //     }
+                    // }
+                    // for (int ii=0;ii<(m%BLK);ii++){
+                    //     C[i+ii][j] = sum[ii];
+                    // }
+                    // free(sum);
+                } // END IF
+            }
+        }// END TARGET PARALLEL FOR
+    } // END SPLITS
+
+    // #pragma omp taskwait
+    comp_time= omp_get_wtime() - comp_time_s;
+    // } // END TARGET DATA
+
+    end_t = omp_get_wtime();
+    dataoff_time = (end_t - start_t) - comp_time;
+
+    // Save results to file
+    char myString[100]; // Allocate memory for myString array
+    sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
+    
+    char filename[100] = "results/timings/timing_asy_offload.txt";
+    saveToFile(myString, filename);
+ // printf("%s", myString);
 
 }
 

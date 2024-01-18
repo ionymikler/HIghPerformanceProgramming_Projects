@@ -33,11 +33,12 @@ EXECUTABLE=matmult_c.nvc++
 
 # define the mkn values in the MKN variable
 #
-SIZES="100 200 500 1000 2000 3000 4500 5000"
+SIZES="100 200 500 1000 2000 3000 4500 5000 "
 # SIZES="100 200"
 
 # define the method type in TYPE
-TYPES="mkn_offload mnk_offload blk_offload"
+TYPES="mkn_offload mnk_offload blk_offload asy_offload"
+# TYPES="asy_offload"
 
 # enable(1)/disable(0) result checking
 export MATMULT_COMPARE=0
