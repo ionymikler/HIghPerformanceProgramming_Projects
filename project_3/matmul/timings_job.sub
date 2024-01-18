@@ -1,0 +1,67 @@
+#!/bin/bash
+# 02614 - High-Performance Computing, January 2024
+# 
+# batch script to run matmult on a dedicated GPU server in the hpcintrogpu
+# queue
+#
+# Author: Bernd Dammann <bd@cc.dtu.dk>
+#         Hans Henrik Brandenborg Sørensen <hhbs@dtu.dk>
+#
+#BSUB -J matmul_gpu_timings
+#BSUB -o results/matmul_gpu_timings%J.out
+#BSUB -q hpcintrogpu
+
+### -- set the email address -- 
+### -- send notification at start -- 
+### -- send notification at completion -- 
+#BSUB -u s222962@dtu.dk
+#BSUB -B
+#BSUB -N
+
+### -- ask for number of cores (default: 1) -- 
+#BSUB -n 32
+
+#BSUB -R "rusage[mem=2048]"
+#BSUB -W 15
+#BSUB -R "span[hosts=1]"
+#BSUB -gpu "num=1:mode=exclusive_process"
+
+# define the driver name to use
+# valid values: matmult_c.nvc++, matmult_f.nvc++
+#
+EXECUTABLE=matmult_c.nvc++
+
+# define the mkn values in the MKN variable
+#
+SIZES="100 200 500 1000 2000 3000 4500 5000"
+# SIZES="100 200"
+
+# define the method type in TYPE
+TYPES="mkn_offload mnk_offload blk_offload"
+
+# enable(1)/disable(0) result checking
+export MATMULT_COMPARE=0
+export MFLOPS_MAX_IT=10
+
+# load module for shared cuda libraries
+module load /appl9/nvhpc/2023_2311/modulefiles/nvhpc-nompi/23.11
+
+# start the collect command with the above settings
+TIME=$(date +"%H:%M:%S")
+
+# Clean results directory
+RESULTS_DIR="results/timings"
+
+echo "Starting $TIME"
+for TYPE in $TYPES
+do
+    RESULTS_FILE="${RESULTS_DIR}/timing_${TYPE}.txt"
+    echo ''> "${RESULTS_FILE}"
+    for S in $SIZES
+    do
+        echo "Running $TYPE with S=$S and $TYPE threads at $TIME"
+        ./matmult_c.nvc++ $TYPE $S $S $S
+    done
+done
+
+echo "Done $TIME"
