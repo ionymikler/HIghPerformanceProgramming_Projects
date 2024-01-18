@@ -1,0 +1,8 @@
+100      234.375    950.101 0 # matmult_mkn_offload
+200      937.500   1520.012 0 # matmult_mkn_offload
+500     5859.375   4267.039 0 # matmult_mkn_offload
+1000    23437.500   7565.045 0 # matmult_mkn_offload
+2000    93750.000  11027.181 0 # matmult_mkn_offload
+3000   210937.500  19381.014 0 # matmult_mkn_offload
+4500   474609.375  30478.410 0 # matmult_mkn_offload
+5000   585937.500  31747.659 0 # matmult_mkn_offload
