@@ -1,0 +1,8 @@
+100      234.375  44514.271 0 # matmult_mkn_omp
+200      937.500  90741.781 0 # matmult_mkn_omp
+500     5859.375 103446.387 0 # matmult_mkn_omp
+1000    23437.500 107800.297 0 # matmult_mkn_omp
+2000    93750.000  93799.196 0 # matmult_mkn_omp
+3000   210937.500  35016.041 0 # matmult_mkn_omp
+4500   474609.375  30915.655 31488 # matmult_mkn_omp
+5000   585937.500  30757.054 0 # matmult_mkn_omp
