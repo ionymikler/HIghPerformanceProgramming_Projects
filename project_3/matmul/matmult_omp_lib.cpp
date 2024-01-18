@@ -99,7 +99,7 @@ void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
 void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
     init_C_dev(m,n,C, NUM_TEAMS, THREADS_PER_TEAM);
 
-    #define BLK 50
+    #define BLK 3
 
     #pragma omp target teams distribute parallel for collapse(2) \
         map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
@@ -107,9 +107,8 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
         for (int j = 0; j < n; j++){
             if (i + BLK - 1 < m){
                 double blk_items[BLK] = {0}; // All initialized to 0
-                for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
-                    blk_items[ii] = 0;
-                    for (int q=0; q<k; q++){ // Single element in block
+                for (int q=0; q<k; q++){ // Single element in block
+                    for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
                         blk_items[ii] += A[i+ii][q] * B[q][j];
                     }
                 }
@@ -117,12 +116,10 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
                     C[i+sii][j] = blk_items[sii];
                 }
             }else{ // elements in the last block (which is smaller)
-                for (int ii=0;ii=(m-BLK);ii++){
-                    double c_elem;
-                    for (int q=0; q<k; q++){
-                        c_elem = A[i+ii][q] * B[q][j];
+                for (int q=0; q<k; q++){
+                    for (int ii=0;ii<(m%BLK);ii++){
+                        C[i+ii][j] += A[i+ii][q] * B[q][j];
                     }
-                    C[i+ii][j] = c_elem;
                 }
             }
         }
