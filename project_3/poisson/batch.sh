@@ -37,14 +37,15 @@ rm -f "Poisson_map_baseline/results.txt"
 rm -f "Poisson_map/results.txt"
 rm -f "Poisson_map_ES/results.txt"
 
-
-# === Compare data transfering strategies
-
 iterations=25000
 startT=0
+tolerance=0.0
+threds=8
+# === Compare data transfering strategies
+
 for N in $Ns
 do
-    ./Poisson_baseline/poisson $N $iterations $startT # cpu parralize
+    OMP_NUM_THREADS=$threds ./Poisson_baseline/poisson $N $iterations $startT $tolerance $threds 0 0 # cpu parralize
     ./Poisson_map/poisson $N $iterations $startT
     # ./Poisson_memcpy/poisson $N $iterations $startT
 done
@@ -52,10 +53,9 @@ done
 
 # === compare gpu and cpu parallization with stopping criteria
 
-tolerance=0.0
 for N in $Ns
 do
-    ./Poisson_barline_ES/poisson $N $iterations $startT $tolerance
+    OMP_NUM_THREADS=$threds ./Poisson_barline_ES/poisson $N $iterations $startT $tolerance $threds 0 0
     ./Poisson_map_ES/poisson $N $iterations $startT $tolerance
     # ./Poisson_memcpy_barline/poisson $N $iterations $startT $tolerance
 done

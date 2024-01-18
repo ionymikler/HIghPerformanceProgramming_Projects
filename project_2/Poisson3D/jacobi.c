@@ -37,7 +37,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
                                         input[i][j][k-1] +
                                         input[i][j][k+1] +
                                         f[i][j][k]);
-                                                        
+
                         // d = output[i][j][k] - input[i][j][k];
                         // dif += d*d;
                     }
