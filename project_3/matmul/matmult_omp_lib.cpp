@@ -211,64 +211,57 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
 
 void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
     #define BLK 4
-    #define SPLITS 2
+    #define SPLITS 10
     double start_time = omp_get_wtime();
 
     double start_t, end_t, dataoff_time, comp_time;
 	start_t = omp_get_wtime();
 
-    for (int s=0;s<SPLITS;++s){
-        int length = m / SPLITS;
-        int start = s * length;
-        #pragma omp target enter data nowait map(to:A[start:length][0:k],B[0:k][0:n],C[start:length][0:n])
-    }
+    #pragma omp target data \
+        map(to:B[0:k][0:n]), \
+        // map(alloc:C[0:m][0:n])
+    {
+        double comp_time_s= omp_get_wtime();
+        for (int s=0;s<SPLITS;++s){
+            int length = m / SPLITS;
+            int start = s * length;
+
+            #pragma omp target teams distribute parallel for nowait \
+            map(to:A[start:length][0:k],B[0:k][0:n]), map(from:C[start:length][0:n]) \
+            num_teams(length) thread_limit(THREADS_PER_TEAM) \
+            collapse(2)            
+            for (int i = start; i < (start+length); i+=BLK){
+                for (int j = 0; j < n; j++){
+                    if (i + BLK - 1 < (start+length)){
+                        double blk_items[BLK] = {0};
+                        for (int q=0; q<k; q++){
+                            for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
+                                blk_items[ii] += A[i+ii][q] * B[q][j];
+                            }
+                        }
+                        for (int sii=0;sii<BLK;sii++){
+                            C[i+sii][j] = blk_items[sii];
+                        }
+                    }else{ // elements in the (smaller) last block
+                        // version 1
+                        for (int ii=0;ii<((start+length)%BLK);ii++){
+                            double sum = 0;
+                            for (int q=0; q<k; q++){
+                                sum += A[i+ii][q] * B[q][j];
+                            }
+                            C[i+ii][j] = sum;
+                        }
+                    } // END IF
+                }
+            }// END TARGET PARALLEL FOR
+    } // END SPLITS
     #pragma omp taskwait
 
-    // #pragma omp target data \
-    //     map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
-    // {
-    double comp_time_s= omp_get_wtime();
-    for (int s=0;s<SPLITS;++s){
-        int length = m / SPLITS;
-        int start = s * length;
+    comp_time= omp_get_wtime() - comp_time_s;
 
-        #pragma omp target teams distribute parallel for \
-        map(to:m,n,k,A[start:length][0:k],B[0:k][0:n]), map(from:C[start:length][0:n]) \
-        num_teams(length) thread_limit(THREADS_PER_TEAM) \
-        collapse(2)            
-        for (int i = 0; i < m; i+=BLK){
-            for (int j = 0; j < n; j++){
-                if (i + BLK - 1 < m){
-                    double blk_items[BLK] = {0};
-                    for (int q=0; q<k; q++){
-                        for (int ii=0; ii<BLK;ii++){ // Calculate elements block [i,i+blk)
-                            blk_items[ii] += A[i+ii][q] * B[q][j];
-                        }
-                    }
-                    for (int sii=0;sii<BLK;sii++){
-                        C[i+sii][j] = blk_items[sii];
-                    }
-                }else{ // elements in the (smaller) last block
-                    // version 1
-                    for (int ii=0;ii<(m%BLK);ii++){
-                        double sum = 0;
-                        for (int q=0; q<k; q++){
-                            sum += A[i+ii][q] * B[q][j];
-                        }
-                        C[i+ii][j] = sum;
-                    }
-                } // END IF
-            }
-        }// END TARGET PARALLEL FOR
-    } // END SPLITS
-
-
-    // data from device
-    #pragma omp target exit data nowait map(release:A[:m][:k],B[:k][:n]) map(from:C[:m][0:n])
-
+    } // END TARGET DATA
 
     // Timing calculations
-    comp_time= omp_get_wtime() - comp_time_s;
     end_t = omp_get_wtime();
     dataoff_time = (end_t - start_t) - comp_time;
     
