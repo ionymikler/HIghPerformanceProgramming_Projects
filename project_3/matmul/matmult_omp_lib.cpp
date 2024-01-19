@@ -218,18 +218,19 @@ void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
 	start_t = omp_get_wtime();
 
     #pragma omp target data \
-        map(to:B[0:k][0:n]), \
-        // map(alloc:C[0:m][0:n])
+        map(to:B[0:k][0:n]) \
+        map(alloc:A[0:k][0:n]),
     {
         double comp_time_s= omp_get_wtime();
         for (int s=0;s<SPLITS;++s){
             int length = m / SPLITS;
             int start = s * length;
 
-            #pragma omp target teams distribute parallel for nowait \
-            map(to:A[start:length][0:k],B[0:k][0:n]), map(from:C[start:length][0:n]) \
+            #pragma omp target teams distribute parallel for collapse(2) nowait  \
             num_teams(length) thread_limit(THREADS_PER_TEAM) \
-            collapse(2)            
+            map(to:A[start:length][0:k]) \
+            map(from:C[start:length][0:n]) 
+            // depend(in:A[start:length][0:k])
             for (int i = start; i < (start+length); i+=BLK){
                 for (int j = 0; j < n; j++){
                     if (i + BLK - 1 < (start+length)){
@@ -243,8 +244,7 @@ void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
                             C[i+sii][j] = blk_items[sii];
                         }
                     }else{ // elements in the (smaller) last block
-                        // version 1
-                        for (int ii=0;ii<((start+length)%BLK);ii++){
+                        for (int ii=0;ii<(length%BLK);ii++){
                             double sum = 0;
                             for (int q=0; q<k; q++){
                                 sum += A[i+ii][q] * B[q][j];
@@ -254,6 +254,7 @@ void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
                     } // END IF
                 }
             }// END TARGET PARALLEL FOR
+
     } // END SPLITS
     #pragma omp taskwait
 

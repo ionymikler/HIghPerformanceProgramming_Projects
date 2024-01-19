@@ -22,7 +22,7 @@ $(TARGET): $(OBJS)
 clean:
 	@/bin/rm -f $(TARGET) $(OBJS)
 
-TYPE=mkn_offload
+TYPE=asy_offload
 DEF_N=500
 DEF_M=$(DEF_N)
 DEF_K=$(DEF_M)
@@ -34,6 +34,12 @@ run:
 	export OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS)
 	@echo "running '$(TYPE)' '$(N)'"
 	MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(N) ${N} $(N)
+
+many:
+	@for n in 500 1000 1500 2000; do \
+		echo "running '$(TYPE)' '$$n' '$$((n+10))' '$$((n+20))'"; \
+		MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $$n $$((n)) $$((n)); \
+	done
 
 submit:
 	bsub < mm_batch_gpu.sub
