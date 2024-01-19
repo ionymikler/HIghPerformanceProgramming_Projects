@@ -9,14 +9,20 @@ extern "C"{
     __typeof__ (b) _b = (b); \
     _a <= _b ? _a : _b; })
 
-int NUM_TEAMS = 114, THREADS_PER_TEAM = 32; //QUESTION: How man y threads per team
+#define BLK 9
+
+#define PLOT true
+
+int NUM_TEAMS = 114, THREADS_PER_TEAM = 64; //QUESTION: How many threads per team
 
 void saveToFile(char myString[100], char filename[100]){
-    // printf("Saving to file\n");
-    // FILE *fp;
-    // fp = fopen(filename, "a");
-    // fprintf(fp, "%s", myString);
-    // fclose(fp);
+    if (PLOT){
+        printf("Saving to file\n");
+        FILE *fp;
+        fp = fopen(filename, "a");
+        fprintf(fp, "%s", myString);
+        fclose(fp);
+    }
 }
 
 void init_C_dev(int m, int n, double **C, int num_teams, int threads_per_team){
@@ -40,12 +46,9 @@ void init_C(int m,int n,double **C){
     {
         for (int j = 0; j < n; j++)
         {
-            #pragma omp critical
-            {
-                C[i][j] = 0.0;
-            }
+            C[i][j] = 0.0;
         }
-    }
+        }
 }
 
 double get_sum_u(double **u, int N){
@@ -117,7 +120,8 @@ void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
     {
         double comp_time_s= omp_get_wtime();
         #pragma omp target teams distribute parallel for \
-            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) collapse(2)
+            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) collapse(2) \
+            num_teams(NUM_TEAMS) thread_limit(THREADS_PER_TEAM)
         for (int i = 0; i < m; i++){
             for (int j = 0; j < n; j++){
                 double sum = 0.0;
@@ -143,18 +147,17 @@ void matmult_mnk_offload(int m,int n,int k,double **A,double **B,double **C){
 }
 
 void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
-    #define BLK 4
     double start_time = omp_get_wtime();
 
     double start_t, end_t, dataoff_time, comp_time;
 	start_t = omp_get_wtime();
     #pragma omp target data \
-        map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
+        map(to:A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
     {
         double comp_time_s= omp_get_wtime();
         #pragma omp target teams distribute parallel for collapse(2) \
-            map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) \
-            num_teams((m/BLK)) thread_limit(THREADS_PER_TEAM)
+            map(to:A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n]) \
+            num_teams((m*n/BLK)) thread_limit(THREADS_PER_TEAM)
         for (int i = 0; i < m; i+=BLK){
             for (int j = 0; j < n; j++){
                 if (i + BLK - 1 < m){
@@ -176,20 +179,6 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
                         }
                         C[i+ii][j] = sum;
                     }
-                    // version 2
-                    // double *sum = (double*) malloc((m%BLK)*sizeof(double));
-                    // for (int ii=0;ii<(m%BLK);ii++){
-                    //     sum[ii] = 0;
-                    // }
-                    // for (int q=0; q<k; q++){
-                    //     for (int ii=0;ii<(m%BLK);ii++){
-                    //         sum[ii] += A[i+ii][q] * B[q][j];
-                    //     }
-                    // }
-                    // for (int ii=0;ii<(m%BLK);ii++){
-                    //     C[i+ii][j] = sum[ii];
-                    // }
-                    // free(sum);
                 } // END IF
             }
         }// END PARALLEL FOR
@@ -210,7 +199,7 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
 }
 
 void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
-    #define BLK 4
+    #define BLK 5
     #define SPLITS 10
     double start_time = omp_get_wtime();
 
@@ -218,7 +207,6 @@ void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
 	start_t = omp_get_wtime();
 
     #pragma omp target data \
-        map(to:B[0:k][0:n]) 
         // map(alloc:A[0:m][0:k]),
     {
         double comp_time_s= omp_get_wtime();
@@ -229,7 +217,7 @@ void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
             // #pragma omp target update to(A[start:length][0:k]) nowait
 
             #pragma omp target teams distribute parallel for collapse(2) nowait  \
-            num_teams(length) thread_limit(THREADS_PER_TEAM) \
+            num_teams(length*n/THREADS_PER_TEAM) thread_limit(THREADS_PER_TEAM) \
             map(to:A[start:length][0:k]) \
             map(from:C[start:length][0:n])
             for (int i = start; i < (start+length); i+=BLK){

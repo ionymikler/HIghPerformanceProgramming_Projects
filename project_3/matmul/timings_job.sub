@@ -31,14 +31,14 @@
 #
 EXECUTABLE=matmult_c.nvc++
 
-# define the mkn values in the MKN variable
+# define the values in the MKN variable
 #
-SIZES="100 200 500 1000 2000 3000 4500 5000 "
+SIZES="100 200 500 1000 2000 3000 4500 5000 6000"
 # SIZES="100 200"
 
 # define the method type in TYPE
-TYPES="mkn_offload mnk_offload blk_offload asy_offload"
-# TYPES="asy_offload"
+# TYPES="mnk_offload blk_offload asy_offload"
+TYPES="asy_offload"
 
 # enable(1)/disable(0) result checking
 export MATMULT_COMPARE=0
@@ -48,21 +48,21 @@ export MFLOPS_MAX_IT=10
 module load /appl9/nvhpc/2023_2311/modulefiles/nvhpc-nompi/23.11
 
 # start the collect command with the above settings
-TIME=$(date +"%H:%M:%S")
 
 # Clean results directory
 RESULTS_DIR="results/timings"
 
-echo "Starting $TIME"
+echo "Starting $(date +"%H:%M:%S")"
 for TYPE in $TYPES
 do
     RESULTS_FILE="${RESULTS_DIR}/timing_${TYPE}.txt"
     echo ''> "${RESULTS_FILE}"
     for S in $SIZES
     do
-        echo "Running $TYPE with S=$S and $TYPE threads at $TIME"
+        echo "Running $TYPE with S=$S and $TYPE threads at $(date +"%H:%M:%S")"
         ./matmult_c.nvc++ $TYPE $S $S $S
     done
 done
 
-echo "Done $TIME"
+TIME=$(date +"%H:%M:%S")
+echo "Done at $TIME"

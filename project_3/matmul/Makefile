@@ -35,10 +35,17 @@ run:
 	@echo "running '$(TYPE)' '$(N)'"
 	MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $(N) ${N} $(N)
 
+run_rect:
+	export OMP_NUM_THREADS=$(DEF_OMP_NUM_THREADS)
+	@echo "running '$(TYPE)' '$(N)' '$$((N+10))' '$$((N+20))'"
+	MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) 500 520 540
+
 many:
 	@for n in 500 1000 1500 2000; do \
-		echo "running '$(TYPE)' '$$n' '$$((n+10))' '$$((n+20))'"; \
+		echo "running '$(TYPE)' '$$n' '$$((n))' '$$((n))'"; \
 		MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $$n $$((n)) $$((n)); \
+		echo "running '$(TYPE)' '$$n' '$$((n+10))' '$$((n+20))'"; \
+		MFLOPS_MAX_IT=$(DEF_MFLOPS_MAX_IT) ./matmult_c.nvc++ $(TYPE) $$n $$((n+20)) $$((n+40)); \
 	done
 
 submit:
