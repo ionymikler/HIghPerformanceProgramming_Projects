@@ -22,6 +22,9 @@ $(TARGET): $(OBJS)
 clean:
 	@/bin/rm -f $(TARGET) $(OBJS)
 
+clean_timing:
+	@/bin/rm -f results/timings/*.txt
+
 TYPE=asy_offload
 DEF_N=500
 DEF_M=$(DEF_N)
