@@ -50,7 +50,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
     printf("%lf",time_total);
 
     double MLUP = pow(N-2,3)*iter_max*pow(10,-6)/time_total;
-    double FLOPS = MLUP * 10/time_total;
+    double FLOPS = MLUP * 7/time_total;
 
     FILE *fptr = fopen("results.txt","a");
     fprintf(fptr, "%d ", N); // grid

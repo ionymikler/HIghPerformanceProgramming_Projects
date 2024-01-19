@@ -51,10 +51,10 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
 
 
     double MLUP = pow(N-2,3)*steps*pow(10,-6)/time_total;
-    double FLOPS = MLUP * 10/time_total;
+    double FLOPS = MLUP * 7/time_total;
     int thread = omp_get_max_threads();
 
-    FILE *fptr = fopen("results_thread_j_p.txt","a");
+    FILE *fptr = fopen("results_base.txt","a");
     fprintf(fptr, "%d ", N); // grid
     fprintf(fptr, "%f ", time_total); // time
     fprintf(fptr, "%d ", steps); // steps

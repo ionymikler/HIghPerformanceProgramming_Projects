@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
 
     jacobi(u, output_u, f, N, iter_max);
 
-    char	output_filename[FILENAME_MAX];
-    sprintf(output_filename, "%s_%d%s", "ExampleJaco", N, ".vtk");
-    print_vtk(output_filename, N, output_u);
+    // char	output_filename[FILENAME_MAX];
+    // sprintf(output_filename, "%s_%d%s", "ExampleJaco", N, ".vtk");
+    // print_vtk(output_filename, N, output_u);
 
     return 0;
 }
