@@ -39,15 +39,15 @@ main(int argc, char *argv[]) {
 
 
     /* get the paramters from the command line */
-    // N         = atoi(argv[1]);	// grid size
-    // iter_max  = atoi(argv[2]);  // max. no. of iterations
-    // tolerance = atof(argv[3]);  // tolerance
-    // start_T   = atof(argv[4]);  // start T for all inner grid points
-    // thread_num = atoi(argv[5]);  // number of threads
-    // verbose   = atoi(argv[6]);  // verbose output
-    // if (argc == 8) {
-	// output_type = atoi(argv[7]);  // ouput type
-    // }
+    N         = atoi(argv[1]);	// grid size
+    iter_max  = atoi(argv[2]);  // max. no. of iterations
+    tolerance = atof(argv[3]);  // tolerance
+    start_T   = atof(argv[4]);  // start T for all inner grid points
+    thread_num = atoi(argv[5]);  // number of threads
+    verbose   = atoi(argv[6]);  // verbose output
+    if (argc == 8) {
+	output_type = atoi(argv[7]);  // ouput type
+    }
     
     // printf("Num threads: %d\n",omp_get_max_threads());
 

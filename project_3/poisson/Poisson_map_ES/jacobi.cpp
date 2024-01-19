@@ -26,7 +26,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     double timer_S = omp_get_wtime();
     while (step < iter_max && dif > tolerance1){ 
         dif = 0.;
-        #pragma omp target teams distribute parallel for collapse (3) reduction(+ : dif) map(tofrom: dif)
+        #pragma omp target teams distribute parallel for collapse (3) reduction(+ : dif)// map(tofrom: dif)
         for (i = 1; i < (N-1);i++){
             for ( j = 1; j < (N-1); j++){
                 for ( k = 1; k < (N-1); k++){
@@ -46,7 +46,6 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
         output = input;
         input = temp;
         step++;
-        // printf("\nDiff: %lf\n", dif);
     }
     }
 
