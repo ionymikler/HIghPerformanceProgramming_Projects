@@ -211,16 +211,23 @@ void matmult_blk_offload(int m,int n,int k,double **A,double **B,double **C){
 
 void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
     #define BLK 4
-    #define SPLITS 5
+    #define SPLITS 2
     double start_time = omp_get_wtime();
 
     double start_t, end_t, dataoff_time, comp_time;
 	start_t = omp_get_wtime();
+
+    for (int s=0;s<SPLITS;++s){
+        int length = m / SPLITS;
+        int start = s * length;
+        #pragma omp target enter data nowait map(to:A[start:length][0:k],B[0:k][0:n],C[start:length][0:n])
+    }
+    #pragma omp taskwait
+
     // #pragma omp target data \
     //     map(to:m,n,k,A[0:m][0:k],B[0:k][0:n]), map(from:C[0:m][0:n])
     // {
     double comp_time_s= omp_get_wtime();
-    #pragma omp parallel for
     for (int s=0;s<SPLITS;++s){
         int length = m / SPLITS;
         int start = s * length;
@@ -250,39 +257,27 @@ void matmult_asy_offload(int m,int n,int k,double **A,double **B,double **C){
                         }
                         C[i+ii][j] = sum;
                     }
-                    // version 2
-                    // double *sum = (double*) malloc((m%BLK)*sizeof(double));
-                    // for (int ii=0;ii<(m%BLK);ii++){
-                    //     sum[ii] = 0;
-                    // }
-                    // for (int q=0; q<k; q++){
-                    //     for (int ii=0;ii<(m%BLK);ii++){
-                    //         sum[ii] += A[i+ii][q] * B[q][j];
-                    //     }
-                    // }
-                    // for (int ii=0;ii<(m%BLK);ii++){
-                    //     C[i+ii][j] = sum[ii];
-                    // }
-                    // free(sum);
                 } // END IF
             }
         }// END TARGET PARALLEL FOR
     } // END SPLITS
 
-    // #pragma omp taskwait
-    comp_time= omp_get_wtime() - comp_time_s;
-    // } // END TARGET DATA
 
+    // data from device
+    #pragma omp target exit data nowait map(release:A[:m][:k],B[:k][:n]) map(from:C[:m][0:n])
+
+
+    // Timing calculations
+    comp_time= omp_get_wtime() - comp_time_s;
     end_t = omp_get_wtime();
     dataoff_time = (end_t - start_t) - comp_time;
-
+    
     // Save results to file
     char myString[100]; // Allocate memory for myString array
     sprintf(myString, "%d, %f, %f\n",m, comp_time*1000, dataoff_time*1000);
-    
     char filename[100] = "results/timings/timing_asy_offload.txt";
     saveToFile(myString, filename);
- // printf("%s", myString);
+    // printf("%s", myString);
 
 }
 
