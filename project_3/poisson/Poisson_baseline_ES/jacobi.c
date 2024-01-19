@@ -28,7 +28,6 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
             for (i = 1; i < (N-1);i++){
                 for ( j = 1; j < (N-1); j++){
                     for ( k = 1; k < (N-1); k++){
-                    // calculate new value
                         output[i][j][k] = h * (input[i-1][j][k] + 
                                         input[i+1][j][k] +
                                         input[i][j-1][k] +
@@ -41,8 +40,8 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
                         dif += d*d;
                     }
                 }
-            } //implicit barrier here
-        } // end of parralized section
+            } 
+        } 
         temp = output;
         output = input;
         input = temp;
@@ -56,7 +55,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     printf("iter %d ", steps); // steps
 
 
-    double MLUP = pow(N-2,3)*steps*pow(10,-6);
+    double MLUP = pow(N-2,3)*steps*pow(10,-6)/time_total;
     double FLOPS = MLUP * 10/time_total;
     int thread = omp_get_max_threads();
 

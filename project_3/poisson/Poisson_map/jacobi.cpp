@@ -31,8 +31,6 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
                                     input[i][j][k-1] +
                                     input[i][j][k+1] +
                                     f[i][j][k]);
-                    // d = output[i][j][k] - input[i][j][k];
-                    // dif += d*d;
                 }
             }
         }
@@ -51,16 +49,17 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max) {
 
     printf("%lf",time_total);
 
-    double MLUP = pow(N-2,3)*iter_max*pow(10,-6);
+    double MLUP = pow(N-2,3)*iter_max*pow(10,-6)/time_total;
     double FLOPS = MLUP * 10/time_total;
 
     FILE *fptr = fopen("results.txt","a");
     fprintf(fptr, "%d ", N); // grid
     fprintf(fptr, "%f ", time_total); // time
-    fprintf(fptr, "%d ", iter_max); // steps
+    fprintf(fptr, "%d ", step); // steps
     fprintf(fptr, "%f ", MLUP); // MLUP
     fprintf(fptr, "%f ", FLOPS); // MFLOPS
     fprintf(fptr, "%d ", N*N*N*8*2); // memory bytes
+
 
     fprintf(fptr, "\n");
 }

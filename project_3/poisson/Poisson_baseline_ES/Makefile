@@ -23,7 +23,7 @@ PARA	=
 CFLAGS	= $(DEFS) $(ARCH) $(OPT) $(ISA) $(CHIP) $(IPO) $(PARA) $(XOPTS)
 LDFLAGS = -lm 
 
-all: $(TARGET_J) $(TARGET_GS) 
+all: $(TARGET_J)# $(TARGET_GS) 
 
 $(TARGET_J): $(OBJECTS) $(OBJS_J)
 	$(CC) -o $@ $(CFLAGS) $(OBJS_J) $(OBJECTS) $(LDFLAGS)
