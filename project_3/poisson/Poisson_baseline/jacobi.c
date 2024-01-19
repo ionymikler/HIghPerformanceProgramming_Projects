@@ -50,7 +50,7 @@ jacobi(double*** input, double*** output, double*** f, int N, int iter_max, doub
     printf("iter %d ", steps); // steps
 
 
-    double MLUP = pow(N-2,3)*steps*pow(10,-6)/time_total;
+    double MLUP = pow(N-2,3)*steps*pow(10,-6);
     double FLOPS = MLUP * 7/time_total;
     int thread = omp_get_max_threads();
 

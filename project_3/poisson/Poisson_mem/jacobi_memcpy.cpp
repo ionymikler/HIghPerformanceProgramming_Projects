@@ -18,8 +18,8 @@ void jacobi(double ***u, double *u_d, double ***output_u, double *output_u_d, do
     double sq_tolerance = tolerance*tolerance;
     time_start = omp_get_wtime();
     int steps = 0;
-
-    
+    int N2 = N*N;
+    int jn, in;
     int dev_num = omp_get_default_device();
 
     // Copy initial conditions to device
@@ -37,13 +37,15 @@ void jacobi(double ***u, double *u_d, double ***output_u, double *output_u_d, do
                     for ( k = 1; k < (N-1); k++){
                     // calculate new value
                     // output_u_d is linearized.
-                        output_u_d[i * N*N + j*N + k] = h * (u_d[(i-1) * N* N + j* N + k] + 
-                                        u_d[(i+1) * N* N + j* N + k] +
-                                        u_d[i*N*N + (j-1) * N + k] +
-                                        u_d[i*N*N + (j+1) * N + k]  + 
-                                        u_d[i*N*N + j*N + (k-1)] +
-                                        u_d[i*N*N + j*N + (k+1)] +
-                                        f_d[i * N*N + j*N + k]);
+                        jn = j*N;
+                        in = i*N2;
+                        output_u_d[in + jn + k] = h * (u_d[(i-1) * N2 + jn + k] + 
+                                        u_d[(i+1) * N2 + jn + k] +
+                                        u_d[in + (j-1) * N + k] +
+                                        u_d[in + (j+1) * N + k]  + 
+                                        u_d[in + jn + (k-1)] +
+                                        u_d[in + jn + (k+1)] +
+                                        f_d[in + jn + k]);
                     }
                 } 
             } //Implicit boundary
@@ -68,8 +70,8 @@ void jacobi(double ***u, double *u_d, double ***output_u, double *output_u_d, do
     printf("iter %d ", steps); // steps
 
 
-    double MLUP = pow(N-2,3)*steps*pow(10,-6);
-    double FLOPS = MLUP * 10/time_total;
+    double MLUP = pow(N-2,3)*steps*pow(10,-6)/time_total;
+    double FLOPS = MLUP * 7;
     int thread = omp_get_max_threads();
 
     FILE *fptr = fopen("results_mem.txt","a");
